@@ -1,0 +1,47 @@
+Must have these imports:
+  import roslib; roslib.load_manifest('ardrone_mudd')
+  from ardrone_mudd.srv import *
+  from ardrone_mudd.msg import *
+  from sensor_msgs.msg import *
+  import rospy
+
+Connect to control service:
+heli = rospy.ServiceProxy("droneControl", Control, persistent=True)
+
+Connect to bounding box service:
+    rospy.Subscriber("SERVICE NAME",std_msgs.msg.String, bBoxUpdate, queue_size=1)
+    Note here that bBoxUpdate is the function run when data is received from the service "SERVICE NAME"
+    That service should output some information about the bounding box.
+    For heliimages.py "SERVICE NAME" is "imageData" and it outputs xl xr yt yb 
+
+    example callback
+    def bBoxUpdate(self, data):
+        br = data.data.split()
+        xl = int(br[0])
+        xr = int(br[1])
+        yt = int(br[2])
+        yb = int(br[3])
+
+Controlling the drone
+heli("takeoff")
+heli("land")
+heli("reset") -- use if drone was flipped.
+heli("heli flag phi theta gaz yaw")
+   replace flag with 0 or 1.  If 0 then drone will attempt to hover in place.  
+   You should use 0 when spinning or trying to stay still.  Otherwise you must use 1 to move.
+
+   The rest are floats between -1 and 1.  .07 is a nice slow speed to use!
+   phi:   left right angle  negative values are left
+   theta: front back angle  negative values are forward
+   gaz    vertical speed
+   yaw    angular speed     negative values are left
+
+   examples:
+   Turn left:
+      heli("heli 0 0 0 0 -.10")
+   Strafe left:
+      heli("heli 1 -.10 0 0 0")
+   Go forward:
+      heli("heli 1 0 -.10 0 0")
+
+
