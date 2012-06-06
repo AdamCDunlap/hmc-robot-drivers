@@ -15,15 +15,16 @@ from tf.broadcaster import TransformBroadcaster
 from irobot_mudd.msg import SensorPacket
 from irobot_mudd.srv import *
 
+import cmd,sys,signal,os
+
 class CreateDriver:
     def __init__(self):
-        port = rospy.get_param('irobot_mudd/port', "/dev/ttyUSB0")
-        self.autodock = rospy.get_param('/brown/irobot_create_2_1/autodock', 0.0)
+        port = rospy.get_param('~port', "/dev/ttyUSB0")
         self.create = Create(port)
         self.packetPub = rospy.Publisher('sensorPacket', SensorPacket)
-        self.odomPub = rospy.Publisher('odom',Odometry)
-        self.odomBroadcaster = TransformBroadcaster()
-        self.fields = ['wheeldropCaster','wheeldropLeft','wheeldropRight','bumpLeft','bumpRight','wall','cliffLeft','cliffFronLeft','cliffFrontRight','cliffRight','virtualWall','infraredByte','advance','play','distance','angle','chargingState','voltage','current','batteryTemperature','batteryCharge','batteryCapacity','wallSignal','cliffLeftSignal','cliffFrontLeftSignal','cliffFrontRightSignal','cliffRightSignal','homeBase','internalCharger','songNumber','songPlaying','x','y']
+        #self.odomPub = rospy.Publisher('odom',Odometry)
+        #self.odomBroadcaster = TransformBroadcaster()
+        self.fields = ['wheeldropCaster','wheeldropLeft','wheeldropRight','bumpLeft','bumpRight','wall','cliffLeft','cliffFronLeft','cliffFrontRight','cliffRight','virtualWall','infraredByte','advance','play','distance','angle','chargingState','voltage','current','batteryTemperature','batteryCharge','batteryCapacity','wallSignal','cliffLeftSignal','cliffFrontLeftSignal','cliffFrontRightSignal','cliffRightSignal','homeBase','internalCharger','songNumber','songPlaying','x','y','theta','chargeLevel']
         self.then = datetime.now() 
         self.x = 0
         self.y = 0
@@ -63,38 +64,41 @@ class CreateDriver:
         quaternion.z = sin(self.th/2)
         quaternion.w = cos(self.th/2)
 
-        self.odomBroadcaster.sendTransform(
-            (self.x, self.y, 0), 
-            (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
-            rospy.Time.now(),
-            "base_link",
-            "odom"
-            )
+        #self.odomBroadcaster.sendTransform(
+        #    (self.x, self.y, 0), 
+        #    (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
+        #    rospy.Time.now(),
+        #    "base_link",
+        #    "odom"
+        #    )
 
-        odom = Odometry()
-        odom.header.stamp = rospy.Time.now()
-        odom.header.frame_id = "odom"
-        odom.pose.pose.position.x = self.x
-        odom.pose.pose.position.y = self.y
-        odom.pose.pose.position.z = 0
-        odom.pose.pose.orientation = quaternion
+        #odom = Odometry()
+        #odom.header.stamp = rospy.Time.now()
+        #odom.header.frame_id = "odom"
+        #odom.pose.pose.position.x = self.x
+        #odom.pose.pose.position.y = self.y
+        #odom.pose.pose.position.z = 0
+        #odom.pose.pose.orientation = quaternion
 
-        odom.child_frame_id = "base_link"
-        odom.twist.twist.linear.x = dx
-        odom.twist.twist.linear.y = 0
-        odom.twist.twist.angular.z = dth
+        #odom.child_frame_id = "base_link"
+        #odom.twist.twist.linear.x = dx
+        #odom.twist.twist.linear.y = 0
+        #odom.twist.twist.angular.z = dth
 
-        self.odomPub.publish(odom)
+        #self.odomPub.publish(odom)
+
 
         packet = SensorPacket()
-        for field in self.fields[:-2]:
+        for field in self.fields[:-3]:
             packet.__setattr__(field,self.create.__getattr__(field))
 
+        charge_level = float(packet.batteryCharge) / float(packet.batteryCapacity)
         packet.__setattr__('x',self.x)
         packet.__setattr__('y',self.y)
+        packet.__setattr__('theta',self.th)
+        packet.__setattr__('chargeLevel',charge_level)
         self.packetPub.publish(packet)
 
-        charge_level = float(packet.batteryCharge) / float(packet.batteryCapacity)
         if packet.homeBase:
             self.inDock = True
         else:
@@ -162,8 +166,26 @@ class CreateDriver:
         self.create.playFullSong(req.notes,req.durations)
         return SongResponse(True)
 
+class prompt(cmd.Cmd):
+    prompt = '>>: '
+    into = '\n irobot_mudd drivers starting \n'
+
+    def do_quit(self,line):
+        self.quit()
+
+    def do_status(self,line):
+        print "hi"
+
+
+    def quit(self):
+        print "Trying to quit gracefully, if all else fails try ctrl-\\"
+        sys.exit(0)
+
+
+
+
 if __name__ == '__main__':
-    node = rospy.init_node('create')
+    node = rospy.init_node('irobot_mudd')
     driver = CreateDriver()
     
     rospy.Service('circle',Circle,driver.circle)
@@ -176,8 +198,19 @@ if __name__ == '__main__':
 
     rospy.Subscriber("cmd_vel", Twist, driver.twist)
 
-    sleep(1)
-    driver.start()
-    sleep(1)
+    prompt = prompt()
+    signal.signal(signal.SIGINT,prompt.quit())
 
-    rospy.spin()
+    while(os.path.exists(driver.port)):
+        print "Connecting to robot"
+        sleep(1)
+        driver.start()
+        sleep(1)
+    else:
+        print "Port " + driver.port + " does not exist"
+        print "Make sure bluetooth 
+
+    # CHECK PARAM
+
+    prompt.cmdloop()
+

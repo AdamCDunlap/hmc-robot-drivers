@@ -32,3 +32,5 @@ uint8 songNumber
 uint8 songPlaying
 float64 x
 float64 y
+float64 theta
+float64 chargeLevel

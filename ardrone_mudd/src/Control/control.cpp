@@ -42,7 +42,7 @@ C_RESULT controlSend( void )
     int c = 1;
     if(configChange)
     {
-    printf("here\n");
+        printf("Config change\n");
         ARDRONE_TOOL_CONFIGURATION_ADDEVENT(video_channel,&camera,NULL);
         //ardrone_tool_configuration_event_configure();
         configChange = false;
@@ -69,6 +69,7 @@ bool controlCb(ardrone_mudd::Control::Request &req,
             back_inserter<vector<string> >(command));
 
 
+    cout << req.command << endl;
     res.result = false;  
     if (command[0].compare("takeoff") == 0)
     {
@@ -110,6 +111,7 @@ bool controlCb(ardrone_mudd::Control::Request &req,
         float Tgaz   = atof(command[4].c_str());
         float Tyaw   = atof(command[5].c_str());
 
+        printf("heli\n");
         if (!( (Tflag == 0) || (Tflag == 1)) )
             res.result = false;
         else if ((Tflag > 1) || (Tflag < -1))
@@ -140,7 +142,9 @@ bool controlCb(ardrone_mudd::Control::Request &req,
     
     } else {
         cout << "unknown command: " << req.command << endl;
+        res.result = false;
     }
+    cout << res.result << endl;
   return true;
 }
 
