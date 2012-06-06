@@ -142,6 +142,7 @@ class Create:
         self.portLock = Lock()
         self.update = lambda : ''
         self.reset()
+        self.lastTank = "0 0"
 
     def start(self):
         """Start the iCreate after initialization or reset."""
@@ -335,6 +336,7 @@ class Create:
             right = 500*right/maxThrottle
         lh,ll = self.__convert(left)
         rh,rl = self.__convert(right)
+        self.lastTank = "%s %s" % (left,right)
         self.send(145,rh,rl,lh,ll)
 
     def forwardTurn(self,speed,radius):

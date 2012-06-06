@@ -31,6 +31,7 @@ class CreateDriver:
         self.th = 0
         self.create.update = self.sense
         self.inDock = False
+        self.chargeLevel = 0
 
     def start(self):
         self.create.start()
@@ -89,14 +90,14 @@ class CreateDriver:
 
 
         packet = SensorPacket()
-        for field in self.fields[:-3]:
+        for field in self.fields[:-4]:
             packet.__setattr__(field,self.create.__getattr__(field))
 
-        charge_level = float(packet.batteryCharge) / float(packet.batteryCapacity)
+        self.chargeLevel = float(packet.batteryCharge) / float(packet.batteryCapacity)
         packet.__setattr__('x',self.x)
         packet.__setattr__('y',self.y)
         packet.__setattr__('theta',self.th)
-        packet.__setattr__('chargeLevel',charge_level)
+        packet.__setattr__('chargeLevel',self.chargeLevel)
         self.packetPub.publish(packet)
 
         if packet.homeBase:
@@ -167,27 +168,74 @@ class CreateDriver:
         return SongResponse(True)
 
 class prompt(cmd.Cmd):
-    prompt = '>>: '
-    into = '\n irobot_mudd drivers starting \n'
+    def __init__(self,robot):
+        cmd.Cmd.__init__(self)
+        self.prompt = '>>: '
+        self.robot = robot.create
+        self.robotWrap = robot
+        self.intro = "\nReady!\nEnter help for commands"
 
     def do_quit(self,line):
+        """ Attempts to stop and quit the program """
         self.quit()
 
     def do_status(self,line):
-        print "hi"
+        """ Prints the status of the robot """
+        print """
+        Battery: %f
+        X: %f.3   Y: %f.3 Th: %f.3
+        Last tank command: %s
+        Serial status: %s
+        """ % (self.robotWrap.chargeLevel,self.robotWrap.x,self.robotWrap.y \
+                ,self.robotWrap.th,self.robot.lastTank,self.robot.port)
 
+    def do_stop(self,line):
+        """ Executes tank 0 0 """
+        print "Trying to stop the robot"
+        self.robot.tank(0,0)
 
-    def quit(self):
-        print "Trying to quit gracefully, if all else fails try ctrl-\\"
+    def do_tank(self,line):
+        """ Executes tank LEFT RIGHT """
+        lineS = line.split()
+        try:
+            left = int(lineS[0])
+            right = int(lineS[1])
+            self.robot.tank(left,right)
+        except:
+            print "Invalid arguments " + line
+
+    def do_reset(self,line):
+        """ Reset the robot """
+        self.robot.reset()
+
+    def quit(self,*args):
+        print "\nTrying to quit gracefully, if all else fails try ctrl-\\"
+        rospy.core.signal_shutdown('keyboard interrupt')
+        self.robot.stop()
+        self.robot.port.close()
         sys.exit(0)
-
-
-
 
 if __name__ == '__main__':
     node = rospy.init_node('irobot_mudd')
+    port = rospy.get_param('~port', "/dev/ttyUSB0")
+
+    if(not os.path.exists(port)):
+        print """\n        Port: %s does not exist
+        Make sure bluetooth is setup or serial cable is plugged in
+        Finally run 'rosparam set /irobot_mudd/port PORT' where port is your port
+        such as /dev/ttyUSB0   /dev/rfcomm0
+
+        Bluetooth reminders: 
+            hcitool scan                          Get your hex address
+            sudo rm /dev/rfcomm0                  Remove the port
+            sudo rfcomm connect 0 HEXADDRESS 1    Connect
+        """ % (port)
+        sys.exit(0)
+
+    print "Connecting to robot"
     driver = CreateDriver()
     
+    print "Connecting to ROS"
     rospy.Service('circle',Circle,driver.circle)
     rospy.Service('demo',Demo,driver.demo)
     rospy.Service('leds',Leds,driver.leds)
@@ -198,19 +246,13 @@ if __name__ == '__main__':
 
     rospy.Subscriber("cmd_vel", Twist, driver.twist)
 
-    prompt = prompt()
-    signal.signal(signal.SIGINT,prompt.quit())
+    prompt = prompt(driver)
+    signal.signal(signal.SIGINT,prompt.quit)
 
-    while(os.path.exists(driver.port)):
-        print "Connecting to robot"
-        sleep(1)
-        driver.start()
-        sleep(1)
-    else:
-        print "Port " + driver.port + " does not exist"
-        print "Make sure bluetooth 
-
-    # CHECK PARAM
+    print "Starting robot control"
+    sleep(1)
+    driver.start()
+    sleep(1)
 
     prompt.cmdloop()
 
