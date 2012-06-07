@@ -109,7 +109,7 @@ class Ardrone():
     send("reset")
 
   def getKeyPress(self):
-    char = chr(cv.WaitKey())
+    char = chr(cv.WaitKey() % 255)
     self.keyCmd(char)
     return char
 
