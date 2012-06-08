@@ -9,15 +9,24 @@ extern "C" {
 
 ros::NodeHandle *n;
 ros::Publisher *navDataPub;
+int state;
 
 inline C_RESULT demo_navdata_client_init( void* data )
 {
   char **argv;
   int argc = 0;
+  int state = 0;
   ros::init(argc,argv, "navData");
   n = new ros::NodeHandle();
   navDataPub = new ros::Publisher( n->advertise<ardrone_mudd::navData>("navData",0) );
   return C_OK;
+}
+
+bool isEmer()
+{
+    if (state == 0)
+        return true;
+    return false;
 }
 
 /* Receving navdata during the event loop */
@@ -42,6 +51,7 @@ inline C_RESULT demo_navdata_client_process( const navdata_unpacked_t* const nav
         //printf("\033[1A");
         ardrone_mudd::navData packet;
 
+        state = nd -> ctrl_state;
         packet.tag = nd -> tag;
         packet.size = nd -> size;
         packet.ctrlState = nd -> ctrl_state;

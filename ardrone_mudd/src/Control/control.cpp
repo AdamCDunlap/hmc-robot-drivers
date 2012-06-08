@@ -26,6 +26,11 @@ C_RESULT controlStart( void )
 
 C_RESULT controlSend( void )
 {
+    if(isEmer())
+    {
+        printf("Emergency detected");
+        takeoff = 0;
+    }
     if(reset)
     {
         reset = false;

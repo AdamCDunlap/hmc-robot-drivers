@@ -8,10 +8,10 @@ extern "C" {
 #include "ardrone_tool/ardrone_tool_configuration.h"
 }
 
+#include "Navdata/navdata.h"
+
 extern input_device_t rosControl;
 bool controlCb(ardrone_mudd::Control::Request &req, 
                ardrone_mudd::Control::Response &res);
-
-
 
 #endif // _CONTROL_H_

@@ -1,8 +1,7 @@
 #include "ros/ros.h"
-
-extern "C" {
 #include "driver.h"
 
+extern "C" {
 //ARDroneLib
 #include <ardrone_tool/ardrone_time.h>
 #include <ardrone_tool/Navdata/ardrone_navdata_client.h>
@@ -22,26 +21,12 @@ extern "C" {
 //Local project
 #include "UI/gamepad.h"
 }
-#include "Navdata/navdata.h"
-#include "Video/video_stage.h"
-#include "Control/control.h"
 
 ros::NodeHandle *nh;
 ros::ServiceServer *controlSrv;
 static int32_t exit_ihm_program = 1;
 
 /* Implementing Custom methods for the main function of an ARDrone application */
-
-
-
-//bool controlCb(ardrone_mudd::Control::Request &req, 
-//               ardrone_mudd::Control::Response &res)
-//{
-//  printf("somthing");
-//  res.result = true;  
-//  return true;
-//}
-
 /* The delegate object calls this method during initialization of an ARDrone application */
 C_RESULT ardrone_tool_init_custom(int argc, char **argv)
 {
