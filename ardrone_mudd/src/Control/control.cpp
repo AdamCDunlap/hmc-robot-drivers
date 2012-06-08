@@ -26,20 +26,15 @@ C_RESULT controlStart( void )
 
 C_RESULT controlSend( void )
 {
-    if(reset && !hasReset)
+    if(reset)
     {
-        printf("reset\n");
+        reset = false;
+        takeoff = 0;
+        printf("resetting\n");
         ardrone_tool_set_ui_pad_select(0);
         ardrone_tool_set_ui_pad_select(1);
-        hasReset = true;
-        takeoff = 0;
-        ardrone_tool_set_ui_pad_start(takeoff);
-        return C_OK;
     }
-    else if(reset && hasReset)
-        return C_OK;
 
-    int c = 1;
     if(configChange)
     {
         printf("Config change\n");
@@ -69,12 +64,10 @@ bool controlCb(ardrone_mudd::Control::Request &req,
             back_inserter<vector<string> >(command));
 
 
-    cout << req.command << endl;
+    cout << "Command: " << req.command << endl;
     res.result = false;  
     if (command[0].compare("takeoff") == 0)
     {
-        hasReset = false;
-        reset = false;
         printf("taking off\n");
         takeoff = 1;
 
@@ -126,7 +119,7 @@ bool controlCb(ardrone_mudd::Control::Request &req,
             res.result = false;
         else
         {
-            flag = Tflag;
+            flag   = Tflag;
             phi    = Tphi;
             theta  = Ttheta;
             gaz    = Tgaz;
@@ -139,12 +132,10 @@ bool controlCb(ardrone_mudd::Control::Request &req,
             printf("Flag must be 0 or 1\n");
             printf("phi,theta,gaz,yaw must be between -1 and 1\n");
         }
-    
     } else {
         cout << "unknown command: " << req.command << endl;
         res.result = false;
     }
-    cout << res.result << endl;
   return true;
 }
 
