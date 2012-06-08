@@ -9,8 +9,8 @@
 
 int takeoff = 0;
 int camera = 0;
-bool hasReset = false;
 bool reset = false;
+bool retrim = false;
 bool configChange = false;
 int flag = 0; // 0 hover , 1 otherwise?
 float phi = 0; // -1 < left right angle  < 1
@@ -41,6 +41,12 @@ C_RESULT controlSend( void )
         ARDRONE_TOOL_CONFIGURATION_ADDEVENT(video_channel,&camera,NULL);
         //ardrone_tool_configuration_event_configure();
         configChange = false;
+    }
+    if(retrim)
+    {
+        retrim = false;
+        printf("Resetting trim\n");
+        ardrone_at_set_flat_trim();
     }
     ardrone_tool_set_ui_pad_start(takeoff);
     if (takeoff == 1)
@@ -85,6 +91,10 @@ bool controlCb(ardrone_mudd::Control::Request &req,
     } else if (command[0].compare("reset") == 0) {
         printf("trying to reset\n");
         reset = true;
+        res.result = true;
+    } else if (command[0].compare("retrim") == 0) {
+        printf("trying to reset trim\n");
+        retrim = true;
         res.result = true;
     } else if (command[0].compare("camera") == 0) {
         int channel = atoi(command[1].c_str());
