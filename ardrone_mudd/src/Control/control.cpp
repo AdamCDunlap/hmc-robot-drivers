@@ -12,6 +12,7 @@ int camera = 0;
 bool reset = false;
 bool retrim = false;
 bool configChange = false;
+unsigned int emerNum = 0;
 int flag = 0; // 0 hover , 1 otherwise?
 float phi = 0; // -1 < left right angle  < 1
 float theta = 0; //    front back angle
@@ -26,11 +27,6 @@ C_RESULT controlStart( void )
 
 C_RESULT controlSend( void )
 {
-    if(isEmer())
-    {
-        printf("Emergency detected");
-        takeoff = 0;
-    }
     if(reset)
     {
         reset = false;
@@ -38,7 +34,16 @@ C_RESULT controlSend( void )
         printf("resetting\n");
         ardrone_tool_set_ui_pad_select(0);
         ardrone_tool_set_ui_pad_select(1);
+        emerNum = 0;
     }
+    else if(isEmer())
+    {
+        if (emerNum % 100 == 0)
+            printf("Emergency detected\n");
+        takeoff = 0;
+        ++emerNum;
+    }
+   
 
     if(configChange)
     {
