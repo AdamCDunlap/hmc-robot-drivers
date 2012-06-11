@@ -15,7 +15,7 @@ inline C_RESULT demo_navdata_client_init( void* data )
 {
   char **argv;
   int argc = 0;
-  int state = 0;
+  int state = -1;
   ros::init(argc,argv, "navData");
   n = new ros::NodeHandle();
   navDataPub = new ros::Publisher( n->advertise<ardrone_mudd::navData>("navData",0) );
