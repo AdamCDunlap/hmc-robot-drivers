@@ -11,6 +11,7 @@ extern "C" {
 #include "Navdata/navdata.h"
 
 extern input_device_t rosControl;
+extern int camera;
 bool controlCb(ardrone_mudd::Control::Request &req, 
                ardrone_mudd::Control::Response &res);
 

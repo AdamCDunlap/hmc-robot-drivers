@@ -48,6 +48,7 @@ extern "C" {
 }
 #include <iostream>
 #include "Video/video_stage.h"
+#include "Control/control.h"
 
 #define NB_STAGES 10
 
@@ -68,7 +69,6 @@ static vp_os_mutex_t  video_update_lock = PTHREAD_MUTEX_INITIALIZER;
 
 C_RESULT output_gtk_stage_open( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
 {
-
     char **argv;
     int argc=0;
     ros::init(argc,argv,"droneImage");
@@ -82,18 +82,29 @@ IplImage *ipl_image_from_data(uint8_t* data)
 {
     IplImage *currframe;
     IplImage *dst;
-
-    currframe = cvCreateImage( cvSize(320,240), IPL_DEPTH_8U, 3);
+    
     dst = cvCreateImage( cvSize(320,240), IPL_DEPTH_8U, 3);
+    //if(reduced) {
+    //    currframe = cvCreateImage( cvSize(176,144), IPL_DEPTH_8U, 3);
+    //    dst = cvCreateImage( cvSize(174,144), IPL_DEPTH_8U, 3);
+    //    currframe -> widthStep = 320*3;
+    //} else {
+    //}
+    if (camera==1 || camera==3) {
+        currframe = cvCreateImage( cvSize(176,144), IPL_DEPTH_8U, 3);
+        currframe -> widthStep = 320*3;
+    } else {
+        currframe = cvCreateImage( cvSize(320,240), IPL_DEPTH_8U, 3);
+    }  
 
     currframe->imageData = (char*)data;
-    cvCvtColor(currframe,dst,CV_BGR2RGB);
+    cvCvtColor(currframe,currframe,CV_BGR2RGB);
+    cvResize(currframe,dst);
     cvReleaseImage(&currframe);
     return dst;
 }
 
 
-//IplImage *img;
 C_RESULT output_gtk_stage_transform(  vlib_stage_decoding_config_t *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
 {
   vp_os_mutex_lock(&video_update_lock);
