@@ -15,7 +15,7 @@ from tf.broadcaster import TransformBroadcaster
 from irobot_mudd.msg import SensorPacket
 from irobot_mudd.srv import *
 
-import cmd,sys,signal,os
+import cmd,sys,signal,os,serial
 
 class CreateDriver:
     def __init__(self):
@@ -220,6 +220,8 @@ if __name__ == '__main__':
     port = rospy.get_param('~port', "/dev/ttyUSB0")
 
     if(not os.path.exists(port)):
+        print rospy.resolve_name('~port')
+
         print """\n        Port: %s does not exist
         Make sure bluetooth is setup or serial cable is plugged in
         Finally run 'rosparam set /irobot_mudd/port PORT' where port is your port
@@ -254,5 +256,10 @@ if __name__ == '__main__':
     driver.start()
     sleep(1)
 
-    prompt.cmdloop()
+    try:
+        prompt.cmdloop()
+    except serial.SerialException:
+        print "\n Lost connection to robot! \n"
+        prompt.quit()
+        
 

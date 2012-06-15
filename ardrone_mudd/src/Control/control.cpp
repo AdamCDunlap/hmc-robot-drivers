@@ -61,6 +61,13 @@ C_RESULT controlSend( void )
     ardrone_tool_set_ui_pad_start(takeoff);
     if (takeoff == 1)
         ardrone_at_set_progress_cmd(flag,phi,theta,gaz,yaw);
+    else {
+        flag = 0; 
+        phi = 0; 
+        theta = 0; 
+        gaz = 0; 
+        yaw = 0;
+    }
     return C_OK;
 }
 
