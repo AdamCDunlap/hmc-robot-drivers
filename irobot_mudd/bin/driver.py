@@ -22,8 +22,8 @@ class CreateDriver:
         port = rospy.get_param('~port', "/dev/ttyUSB0")
         self.create = Create(port)
         self.packetPub = rospy.Publisher('sensorPacket', SensorPacket)
-        #self.odomPub = rospy.Publisher('odom',Odometry)
-        #self.odomBroadcaster = TransformBroadcaster()
+        self.odomPub = rospy.Publisher('odom',Odometry)
+        self.odomBroadcaster = TransformBroadcaster()
         self.fields = ['wheeldropCaster','wheeldropLeft','wheeldropRight','bumpLeft','bumpRight','wall','cliffLeft','cliffFronLeft','cliffFrontRight','cliffRight','virtualWall','infraredByte','advance','play','distance','angle','chargingState','voltage','current','batteryTemperature','batteryCharge','batteryCapacity','wallSignal','cliffLeftSignal','cliffFrontLeftSignal','cliffFrontRightSignal','cliffRightSignal','homeBase','internalCharger','songNumber','songPlaying','x','y','theta','chargeLevel']
         self.then = datetime.now() 
         self.x = 0
@@ -65,28 +65,28 @@ class CreateDriver:
         quaternion.z = sin(self.th/2)
         quaternion.w = cos(self.th/2)
 
-        #self.odomBroadcaster.sendTransform(
-        #    (self.x, self.y, 0), 
-        #    (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
-        #    rospy.Time.now(),
-        #    "base_link",
-        #    "odom"
-        #    )
+        self.odomBroadcaster.sendTransform(
+            (self.x, self.y, 0), 
+            (quaternion.x, quaternion.y, quaternion.z, quaternion.w),
+            rospy.Time.now(),
+            "base_link",
+            "odom"
+            )
 
-        #odom = Odometry()
-        #odom.header.stamp = rospy.Time.now()
-        #odom.header.frame_id = "odom"
-        #odom.pose.pose.position.x = self.x
-        #odom.pose.pose.position.y = self.y
-        #odom.pose.pose.position.z = 0
-        #odom.pose.pose.orientation = quaternion
+        odom = Odometry()
+        odom.header.stamp = rospy.Time.now()
+        odom.header.frame_id = "odom"
+        odom.pose.pose.position.x = self.x
+        odom.pose.pose.position.y = self.y
+        odom.pose.pose.position.z = 0
+        odom.pose.pose.orientation = quaternion
 
-        #odom.child_frame_id = "base_link"
-        #odom.twist.twist.linear.x = dx
-        #odom.twist.twist.linear.y = 0
-        #odom.twist.twist.angular.z = dth
+        odom.child_frame_id = "base_link"
+        odom.twist.twist.linear.x = dx
+        odom.twist.twist.linear.y = 0
+        odom.twist.twist.angular.z = dth
 
-        #self.odomPub.publish(odom)
+        self.odomPub.publish(odom)
 
 
         packet = SensorPacket()
