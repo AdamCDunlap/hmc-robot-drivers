@@ -7,7 +7,7 @@ import rospy
 import pygame
 
 rospy.wait_for_service("tank")
-heli = rospy.ServiceProxy("droneControl", Tank)
+tank = rospy.ServiceProxy("tank", Tank)
 print "connected"
 
 pygame.init()
@@ -29,6 +29,6 @@ while True:
     speedl = (x * 250) + (theta * 250)
     speedr = (x * 250) - (theta * 250)
     tank(speedl,speedr)
-    #rospy.sleep(.01)
+    rospy.sleep(.05)
 
 
