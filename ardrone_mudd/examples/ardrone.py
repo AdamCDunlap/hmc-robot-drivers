@@ -19,6 +19,7 @@ class Ardrone():
     Keyboard Controls:
     h: quit
     t: takeoff              r: reset    spacebar: land
+    1: use forward camera               2: use bottom camera
 
     q: forward left strafe  w: forward  e: forward right strafe
     a: strafe left          s: hover:   d: strafe right
@@ -26,6 +27,8 @@ class Ardrone():
 
     f: spin left
     g: spin right
+    v: up
+    b: down
     """
 
     self.lastSent = "None"
@@ -94,6 +97,12 @@ class Ardrone():
 
   def backward(self,power):
     self.send(self.makeHeliStr(1,0,power,0,0))
+
+  def up(self,power):
+    self.send(self.makeHeliStr(0,0,0,power,0))
+
+  def down(self,power):
+    self.send(self.makeHeliStr(0,0,0,-power,0))
 
   def takeoff(self):
     if not airborne:
@@ -172,10 +181,14 @@ class Ardrone():
             syaw = self.keyPower
         elif char == 'f':
             syaw = -self.keyPower
+        elif char == 'v':
+            sgaz = self.keyPower
+        elif char == 'b':
+            sgaz = -self.keyPower
         else:
             print "else"
-            self.send(lastsent)
-            return;
+            self.send(self.lastsent)
+            return
 
         helistr = "heli %i %.3f %.3f %.3f %.3f" \
                 % (sflag,sphi,stheta,sgaz,syaw)
