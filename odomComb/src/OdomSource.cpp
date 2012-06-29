@@ -6,13 +6,17 @@ OdomSource::OdomSource(std::string tName, double tC, double rC): topicName(tName
 
 void OdomSource::odomCb(const nav_msgs::Odometry::ConstPtr &msg)
 {
-  dx += msg->pose.pose.position.x - lastOdom->pose.pose.position.x;
-  dy += msg->pose.pose.position.y - lastOdom->pose.pose.position.y;
-  dz += msg->pose.pose.position.z - lastOdom->pose.pose.position.z;
-  dqx += msg->pose.pose.orientation.x - lastOdom->pose.pose.orientation.x;
-  dqy += msg->pose.pose.orientation.y - lastOdom->pose.pose.orientation.y;
-  dqz += msg->pose.pose.orientation.z - lastOdom->pose.pose.orientation.z;
-  dqw += msg->pose.pose.orientation.w - lastOdom->pose.pose.orientation.w;
+  if (lastOdom)
+  {
+    dx += msg->pose.pose.position.x - lastOdom->pose.pose.position.x;
+    dy += msg->pose.pose.position.y - lastOdom->pose.pose.position.y;
+    dz += msg->pose.pose.position.z - lastOdom->pose.pose.position.z;
+    dqx += msg->pose.pose.orientation.x - lastOdom->pose.pose.orientation.x;
+    dqy += msg->pose.pose.orientation.y - lastOdom->pose.pose.orientation.y;
+    dqz += msg->pose.pose.orientation.z - lastOdom->pose.pose.orientation.z;
+    dqw += msg->pose.pose.orientation.w - lastOdom->pose.pose.orientation.w;
+  }
+  std::cout << topicName << ": " << dx << std::endl;
   lastOdom = msg;
   updated = true;
 }
@@ -32,7 +36,7 @@ std::vector<double> OdomSource::getdPos()
 {
   updated = false;
   std::vector<double> pos;
-  pos.resize(3);
+  std::cout<< "Dx: " << dx << std::endl;
   pos.push_back(dx);
   pos.push_back(dy);
   pos.push_back(dz);
@@ -43,7 +47,6 @@ std::vector<double> OdomSource::getdQuat()
 {
   updated = false;
   std::vector<double> quat;
-  quat.resize(3);
   quat.push_back(dqx);
   quat.push_back(dqy);
   quat.push_back(dqz);
@@ -58,11 +61,11 @@ std::string OdomSource::getName() const
 
 double OdomSource::getrConf() const
 {
-  return tConf;
+  return rConf;
 }
 double OdomSource::gettConf() const
 {
-  return rConf;
+  return tConf;
 }
 bool OdomSource::hasUpdated() const
 {
