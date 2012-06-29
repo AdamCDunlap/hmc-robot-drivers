@@ -1,6 +1,8 @@
 #include <sstream>
 #include "ros/ros.h"
 #include "OdomSource.h"
+#include <tf/transform_listener.h>
+#include <tf/transform_broadcaster.h>
 
 typedef std::vector<OdomSource>::iterator odomIter;
 
@@ -35,7 +37,28 @@ void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub
   {
     sumPosVectors(resultPos, oIt->getdPos(), oIt->gettConf()/tTotal);
     sumPosVectors(resultQuat, oIt->getdQuat(), oIt->getrConf()/rTotal);
+    oIt->resetPos();
   }
+
+  //Publishing the Message
+  nav_msgs::Odometry odom_msg;
+  odom_msg.header.stamp = ros::Time::now();
+  odom_msg.header.frame_id = "odomCombOut";
+  
+  //Giving it the appropriate pose info
+  odom_msg.pose.pose.position.x = resultPos[0];
+  odom_msg.pose.pose.position.y = resultPos[1];
+  odom_msg.pose.pose.position.z = resultPos[2];
+
+  //constructing the quaternion
+  tf::Quaternion tf_odom_quat = tf::Quaternion(resultQuat[0], resultQuat[1], resultQuat[2], resultQuat[3]);
+  geometry_msgs::Quaternion odomQuat;
+  tf::quaternionTFToMsg(tf_odom_quat, odomQuat);
+  odom_msg.pose.pose.orientation = odomQuat;
+
+  //Publish it
+  pub.publish(odom_msg);
+  
 }
 
 int main(int argc, char **argv)
