@@ -10,7 +10,8 @@
   <url>http://ros.org/wiki/odomComb</url>
   <depend package="roscpp"/>
   <depend package="tf"/>
-
+  <depend package="nav_msgs"/>
+  <rosdep name="eigen"/>
 </package>
 
 

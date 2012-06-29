@@ -1,0 +1,10 @@
+<launch>
+  <node name="odomComber" pkg="odomComb" type="odomComb" output="screen">
+    <param name="odomSource0/topic" value="odom"/>
+    <param name="odomSource0/tConf" value="0.0"/>
+    <param name="odomSource0/rConf" value="50.0"/>
+    <param name="odomSource1/topic" value="odom1"/>
+    <param name="odomSource1/tConf" value="10.0"/>
+    <param name="odomSource1/rConf" value="150.0"/>
+  </node>
+</launch>
