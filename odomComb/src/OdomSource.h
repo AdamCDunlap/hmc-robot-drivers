@@ -4,6 +4,8 @@
 #include "ros/ros.h"
 #include "ros/time.h"
 #include "nav_msgs/Odometry.h"
+#include <tf/transform_listener.h>
+#include <tf/transform_broadcaster.h>
 #include <iostream>
 // #include <vector>
 
@@ -16,7 +18,7 @@ public:
   double getrConf() const;
   double gettConf() const;
   std::vector<double> getdPos();
-  std::vector<double> getdQuat();
+  tf::Quaternion getdQuat();
   void odomCb(const nav_msgs::Odometry::ConstPtr &msg);
   void resetPos();
   bool hasUpdated() const;
@@ -28,10 +30,7 @@ private:
   double dx;
   double dy;
   double dz;
-  double dqw;
-  double dqx;
-  double dqy;
-  double dqz;
+  tf::Quaternion dQuat;
   nav_msgs::Odometry::ConstPtr lastOdom;
   bool updated;
 };

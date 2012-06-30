@@ -1,22 +1,38 @@
 #include "OdomSource.h"
 
-OdomSource::OdomSource(std::string tName, double tC, double rC): topicName(tName), tConf(tC), rConf(rC), updated(false) 
+OdomSource::OdomSource(std::string tName, double tC, double rC)
+  : topicName(tName), tConf(tC), rConf(rC), dx(0), dy(0), dz(0),
+    dQuat(tf::Quaternion::getIdentity()), lastOdom(), updated(false)
 {
+
 }
 
 void OdomSource::odomCb(const nav_msgs::Odometry::ConstPtr &msg)
 {
+  double qx = msg->pose.pose.orientation.x;
+  double qy = msg->pose.pose.orientation.y;
+  double qz = msg->pose.pose.orientation.z;
+  double qw = msg->pose.pose.orientation.w;
+  tf::Quaternion newQuat = tf::Quaternion(qx,qy,qz,qw);
+  tf::Quaternion oldQuatInv = tf::Quaternion::getIdentity();
   if (lastOdom)
   {
     dx += msg->pose.pose.position.x - lastOdom->pose.pose.position.x;
     dy += msg->pose.pose.position.y - lastOdom->pose.pose.position.y;
     dz += msg->pose.pose.position.z - lastOdom->pose.pose.position.z;
-    dqx += msg->pose.pose.orientation.x - lastOdom->pose.pose.orientation.x;
-    dqy += msg->pose.pose.orientation.y - lastOdom->pose.pose.orientation.y;
-    dqz += msg->pose.pose.orientation.z - lastOdom->pose.pose.orientation.z;
-    dqw += msg->pose.pose.orientation.w - lastOdom->pose.pose.orientation.w;
+    double old_qx = lastOdom->pose.pose.orientation.x;
+    double old_qy = lastOdom->pose.pose.orientation.y;
+    double old_qz = lastOdom->pose.pose.orientation.z;
+    double old_qw = lastOdom->pose.pose.orientation.w;
+    oldQuatInv = tf::Quaternion(old_qx, old_qy, old_qz, old_qw).inverse();
   }
-  std::cout << topicName << ": " << dx << std::endl;
+  else
+  {
+    dx = msg->pose.pose.position.x;
+    dy = msg->pose.pose.position.y;
+    dz = msg->pose.pose.position.z;
+  }
+  dQuat *= (oldQuatInv * newQuat);
   lastOdom = msg;
   updated = true;
 }
@@ -26,10 +42,7 @@ void OdomSource::resetPos()
   dx  = 0;
   dy  = 0;
   dz  = 0;
-  dqx = 0;
-  dqy = 0;
-  dqz = 0;
-  dqw = 0;
+  dQuat = tf::Quaternion::getIdentity();
 }
 
 std::vector<double> OdomSource::getdPos()
@@ -43,15 +56,10 @@ std::vector<double> OdomSource::getdPos()
   return pos;
 }
 
-std::vector<double> OdomSource::getdQuat()
+tf::Quaternion OdomSource::getdQuat()
 {
   updated = false;
-  std::vector<double> quat;
-  quat.push_back(dqx);
-  quat.push_back(dqy);
-  quat.push_back(dqz);
-  quat.push_back(dqw);
-  return quat;
+  return dQuat;
 }
 
 std::string OdomSource::getName() const

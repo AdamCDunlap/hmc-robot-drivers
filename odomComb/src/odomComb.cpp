@@ -13,16 +13,14 @@ void sumPosVectors(std::vector<double> &result, std::vector<double> const &summa
      result[i] += summand[i]*weight;
 }
 
-void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub, double tTotal, double rTotal, std::vector<double>& resultPos, std::vector<double>& resultQuat)
+void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub, double tTotal, double rTotal, std::vector<double>& resultPos, tf::Quaternion& resultQuat)
 {
   //For Now, just doing the simple way, a straightforward weighted average of the odometry sources. 
 
   for (odomIter oIt = odomSources.begin(); oIt != odomSources.end(); ++oIt)
   {
-    std::cout << "Result x: " << resultPos[0] << " Current Odom: " <<  (oIt->getdPos())[0] << std::endl;
-    std::cout << " conf: " << oIt->gettConf() << " weight: " << oIt->gettConf()/tTotal << std::endl;
     sumPosVectors(resultPos, oIt->getdPos(), oIt->gettConf()/tTotal);
-    sumPosVectors(resultQuat, oIt->getdQuat(), oIt->getrConf()/rTotal);
+    resultQuat *= tf::Quaternion::getIdentity().slerp(oIt->getdQuat(), oIt->getrConf()/rTotal);
     oIt->resetPos();
   }
 
@@ -37,10 +35,9 @@ void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub
   odom_msg.pose.pose.position.z = resultPos[2];
 
   //constructing the quaternion
-  //tf::Quaternion tf_odom_quat = tf::Quaternion(resultQuat[0], resultQuat[1], resultQuat[2], resultQuat[3]);
-  //geometry_msgs::Quaternion odomQuat;
-  //tf::quaternionTFToMsg(tf_odom_quat, odomQuat);
-  //odom_msg.pose.pose.orientation = odomQuat;
+  geometry_msgs::Quaternion odomQuat;
+  tf::quaternionTFToMsg(resultQuat, odomQuat);
+  odom_msg.pose.pose.orientation = odomQuat;
 
   //Publish it
   pub.publish(odom_msg);
@@ -102,13 +99,11 @@ int main(int argc, char **argv)
   std::cout << "tTotal: " << tTotal << " rTotal: " << rTotal << std::endl;
 
   std::vector<double> resultPos;
-  std::vector<double> resultQuat;
+  tf::Quaternion resultQuat = tf::Quaternion::getIdentity();
   for (int i = 0; i != 3; ++i)
   {
-    resultQuat.push_back(0);
     resultPos.push_back(0);
   }
-  resultQuat.push_back(0);
 
   while (true) {
     ros::spinOnce();
