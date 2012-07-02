@@ -13,7 +13,7 @@ void sumPosVectors(std::vector<double> &result, std::vector<double> const &summa
      result[i] += summand[i]*weight;
 }
 
-void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub, double tTotal, double rTotal, std::vector<double>& resultPos, tf::Quaternion& resultQuat)
+void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub, double tTotal, double rTotal, std::vector<double>& resultPos, tf::Quaternion& resultQuat, tf::TransformBroadcaster tf_broadcaster, std::string odomFrame = "odomCombOut", std::string baseFrame = "base_link")
 {
   //For Now, just doing the simple way, a straightforward weighted average of the odometry sources. 
 
@@ -23,20 +23,36 @@ void combineAndPublish(std::vector<OdomSource> &odomSources, ros::Publisher &pub
     resultQuat *= tf::Quaternion::getIdentity().slerp(oIt->getdQuat(), oIt->getrConf()/rTotal);
     oIt->resetPos();
   }
+  
+  ros::Time currentTime = ros::Time::now();
+
+  //constructing the quaternion
+  geometry_msgs::Quaternion odomQuat;
+  tf::quaternionTFToMsg(resultQuat, odomQuat);
+
+  //Publishing the transform
+  geometry_msgs::TransformStamped odom_trans;
+  odom_trans.header.stamp = currentTime;
+  odom_trans.header.frame_id = odomFrame;
+  odom_trans.child_frame_id = baseFrame;
+
+  odom_trans.transform.translation.x = resultPos[0];
+  odom_trans.transform.translation.y = resultPos[1];
+  odom_trans.transform.translation.z = resultPos[2];
+  odom_trans.transform.rotation = odomQuat;
+
+  //Broadcasting
+  tf_broadcaster.sendTransform(odom_trans);
 
   //Publishing the Message
   nav_msgs::Odometry odom_msg;
-  odom_msg.header.stamp = ros::Time::now();
-  odom_msg.header.frame_id = "odomCombOut";
+  odom_msg.header.stamp = currentTime;
+  odom_msg.header.frame_id = odomFrame;
   
   //Giving it the appropriate pose info
   odom_msg.pose.pose.position.x = resultPos[0];
   odom_msg.pose.pose.position.y = resultPos[1];
   odom_msg.pose.pose.position.z = resultPos[2];
-
-  //constructing the quaternion
-  geometry_msgs::Quaternion odomQuat;
-  tf::quaternionTFToMsg(resultQuat, odomQuat);
   odom_msg.pose.pose.orientation = odomQuat;
 
   //Publish it
@@ -56,6 +72,7 @@ int main(int argc, char **argv)
   std::string odomPubName;
   mNh.param<std::string>("odomPub",odomPubName,"odomCombOut");
   ros::Publisher pub = mNh.advertise<nav_msgs::Odometry>(odomPubName,1,true);
+  tf::TransformBroadcaster tf_broadcaster;
 
   std::string paramBase = "~odomSource";
   std::vector<ros::Subscriber> subscribers;
@@ -118,7 +135,7 @@ int main(int argc, char **argv)
     }
     if (newPub)
     {
-      combineAndPublish(odomSources, pub, tTotal, rTotal, resultPos, resultQuat);
+      combineAndPublish(odomSources, pub, tTotal, rTotal, resultPos, resultQuat, tf_broadcaster, "odomCombOut", "comb_base_link");
     }
   }
 }

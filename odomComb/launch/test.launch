@@ -1,4 +1,22 @@
 <launch>
+  <!-- static tfs -->
+  <node pkg="tf" type="static_transform_publisher" name="odom_to_vis_odom" 
+    args="0.0 0.0 0.0 0.0 0.0 0.0 odom visOdom 40" />
+
+  <node pkg="tf" type="static_transform_publisher" name="odom_to_odomCombOut" 
+    args="0.0 0.0 0.0 0.0 0.0 0.0 odom odomCombOut 40" />
+
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera"
+    args="0.0 0.0 0.0 0.0 0.0 0.0 comb_base_link openni_camera 40" />
+
+  <!-- rviz config -->
+  <node pkg="rviz" type="rviz" name="rviz" 
+    args="-d $(find odomComb)/launch/comparer.vcg"/>
+
+  <!-- Joystick -->
+  <node pkg="irobot_mudd" type="joy.py" name="joystick" />
+
+  <!-- Odometry Combiner -->
   <node name="odomComber" pkg="odomComb" type="odomComb" output="screen">
     <param name="odomSource0/topic" value="odom"/>
     <param name="odomSource0/tConf" value="90.0"/>

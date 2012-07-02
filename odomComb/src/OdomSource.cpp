@@ -49,7 +49,6 @@ std::vector<double> OdomSource::getdPos()
 {
   updated = false;
   std::vector<double> pos;
-  std::cout<< "Dx: " << dx << std::endl;
   pos.push_back(dx);
   pos.push_back(dy);
   pos.push_back(dz);
