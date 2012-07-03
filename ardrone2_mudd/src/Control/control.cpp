@@ -27,37 +27,37 @@ C_RESULT controlStart( void )
 
 C_RESULT controlSend( void )
 {
-    if(reset)
-    {
-        reset = false;
-        takeoff = 0;
-        printf("resetting\n");
-        ardrone_tool_set_ui_pad_select(0);
-        ardrone_tool_set_ui_pad_select(1);
-        emerNum = 0;
-    }
-    else if(isEmer())
-    {
-        if (emerNum % 100 == 0)
-            printf("Emergency detected\n");
-        takeoff = 0;
-        ++emerNum;
-    }
+    //if(reset)
+    //{
+    //    reset = false;
+    //    takeoff = 0;
+    //    printf("resetting\n");
+    //    ardrone_tool_set_ui_pad_select(0);
+    //    ardrone_tool_set_ui_pad_select(1);
+    //    emerNum = 0;
+    //}
+    //else 
+    //{
+    //    if (emerNum % 100 == 0)
+    //        printf("Emergency detected\n");
+    //    takeoff = 0;
+    //    ++emerNum;
+    //}
    
 
-    if(configChange)
-    {
-        printf("Config change\n");
-        ARDRONE_TOOL_CONFIGURATION_ADDEVENT(video_channel,&camera,NULL);
-        //ardrone_tool_configuration_event_configure();
-        configChange = false;
-    }
-    if(retrim)
-    {
-        retrim = false;
-        printf("Resetting trim\n");
-        ardrone_at_set_flat_trim();
-    }
+    //if(configChange)
+    //{
+    //    printf("Config change\n");
+    //    ARDRONE_TOOL_CONFIGURATION_ADDEVENT(video_channel,&camera,NULL);
+    //    //ardrone_tool_configuration_event_configure();
+    //    configChange = false;
+    //}
+    //if(retrim)
+    //{
+    //    retrim = false;
+    //    printf("Resetting trim\n");
+    //    ardrone_at_set_flat_trim();
+    //}
     ardrone_tool_set_ui_pad_start(takeoff);
     if (takeoff == 1)
         ardrone_at_set_progress_cmd(flag,phi,theta,gaz,yaw);
@@ -76,8 +76,8 @@ C_RESULT controlEnd( void )
   return C_OK;
 }
 
-bool controlCb(ardrone_mudd::Control::Request &req, 
-               ardrone_mudd::Control::Response &res)
+bool controlCb(ardrone2_mudd::Control::Request &req, 
+               ardrone2_mudd::Control::Response &res)
 {
     using namespace std;
     vector<string> command;

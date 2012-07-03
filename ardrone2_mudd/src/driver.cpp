@@ -11,7 +11,7 @@ int main()
   ros::init(x,&s,"ardrone2");
   ros::NodeHandle nh("~");
   navP = nh.advertise<ardrone2_mudd::navData>("navData",1);
-  controlSrv = nh->advertiseService("droneControl",controlCb);
+  ros::ServiceServer controlSrv = nh.advertiseService("heli",controlCb);
 	return ardrone_tool_main(1, &s);
 }
 

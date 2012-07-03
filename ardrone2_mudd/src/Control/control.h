@@ -12,7 +12,7 @@ extern "C" {
 
 extern input_device_t rosControl;
 extern int camera;
-bool controlCb(ardrone_mudd::Control::Request &req, 
-               ardrone_mudd::Control::Response &res);
+bool controlCb(ardrone2_mudd::Control::Request &req, 
+               ardrone2_mudd::Control::Response &res);
 
 #endif // _CONTROL_H_
