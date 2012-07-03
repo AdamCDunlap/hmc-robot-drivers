@@ -6,6 +6,7 @@ FILE(REMOVE_RECURSE
   "../msg_gen"
   "../srv_gen"
   "CMakeFiles/ROSBUILD_gensrv_cpp"
+  "../srv_gen/cpp/include/ardrone2_mudd/Config.h"
   "../srv_gen/cpp/include/ardrone2_mudd/Control.h"
 )
 

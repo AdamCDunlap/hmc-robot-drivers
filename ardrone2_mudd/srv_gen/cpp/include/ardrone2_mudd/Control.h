@@ -26,17 +26,37 @@ struct ControlRequest_ {
   typedef ControlRequest_<ContainerAllocator> Type;
 
   ControlRequest_()
-  : command()
+  : flag(0)
+  , roll(0.0)
+  , pitch(0.0)
+  , gaz(0.0)
+  , yaw(0.0)
   {
   }
 
   ControlRequest_(const ContainerAllocator& _alloc)
-  : command(_alloc)
+  : flag(0)
+  , roll(0.0)
+  , pitch(0.0)
+  , gaz(0.0)
+  , yaw(0.0)
   {
   }
 
-  typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _command_type;
-  std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  command;
+  typedef int8_t _flag_type;
+  int8_t flag;
+
+  typedef float _roll_type;
+  float roll;
+
+  typedef float _pitch_type;
+  float pitch;
+
+  typedef float _gaz_type;
+  float gaz;
+
+  typedef float _yaw_type;
+  float yaw;
 
 
 private:
@@ -47,21 +67,25 @@ public:
   ROS_DEPRECATED const std::string __getDataType() const { return __s_getDataType_(); }
 
 private:
-  static const char* __s_getMD5Sum_() { return "cba5e21e920a3a2b7b375cb65b64cdea"; }
+  static const char* __s_getMD5Sum_() { return "7f00cbb798eafc9179d36917a87240f3"; }
 public:
   ROS_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
 
   ROS_DEPRECATED const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
 
 private:
-  static const char* __s_getServerMD5Sum_() { return "2fb3aa2736d70ecbfc297d3d9b879661"; }
+  static const char* __s_getServerMD5Sum_() { return "7f00cbb798eafc9179d36917a87240f3"; }
 public:
   ROS_DEPRECATED static const std::string __s_getServerMD5Sum() { return __s_getServerMD5Sum_(); }
 
   ROS_DEPRECATED const std::string __getServerMD5Sum() const { return __s_getServerMD5Sum_(); }
 
 private:
-  static const char* __s_getMessageDefinition_() { return "string command\n\
+  static const char* __s_getMessageDefinition_() { return "int8 flag\n\
+float32 roll\n\
+float32 pitch\n\
+float32 gaz\n\
+float32 yaw\n\
 \n\
 "; }
 public:
@@ -72,21 +96,33 @@ public:
   ROS_DEPRECATED virtual uint8_t *serialize(uint8_t *write_ptr, uint32_t seq) const
   {
     ros::serialization::OStream stream(write_ptr, 1000000000);
-    ros::serialization::serialize(stream, command);
+    ros::serialization::serialize(stream, flag);
+    ros::serialization::serialize(stream, roll);
+    ros::serialization::serialize(stream, pitch);
+    ros::serialization::serialize(stream, gaz);
+    ros::serialization::serialize(stream, yaw);
     return stream.getData();
   }
 
   ROS_DEPRECATED virtual uint8_t *deserialize(uint8_t *read_ptr)
   {
     ros::serialization::IStream stream(read_ptr, 1000000000);
-    ros::serialization::deserialize(stream, command);
+    ros::serialization::deserialize(stream, flag);
+    ros::serialization::deserialize(stream, roll);
+    ros::serialization::deserialize(stream, pitch);
+    ros::serialization::deserialize(stream, gaz);
+    ros::serialization::deserialize(stream, yaw);
     return stream.getData();
   }
 
   ROS_DEPRECATED virtual uint32_t serializationLength() const
   {
     uint32_t size = 0;
-    size += ros::serialization::serializationLength(command);
+    size += ros::serialization::serializationLength(flag);
+    size += ros::serialization::serializationLength(roll);
+    size += ros::serialization::serializationLength(pitch);
+    size += ros::serialization::serializationLength(gaz);
+    size += ros::serialization::serializationLength(yaw);
     return size;
   }
 
@@ -105,17 +141,12 @@ struct ControlResponse_ {
   typedef ControlResponse_<ContainerAllocator> Type;
 
   ControlResponse_()
-  : result(false)
   {
   }
 
   ControlResponse_(const ContainerAllocator& _alloc)
-  : result(false)
   {
   }
-
-  typedef uint8_t _result_type;
-  uint8_t result;
 
 
 private:
@@ -126,22 +157,21 @@ public:
   ROS_DEPRECATED const std::string __getDataType() const { return __s_getDataType_(); }
 
 private:
-  static const char* __s_getMD5Sum_() { return "eb13ac1f1354ccecb7941ee8fa2192e8"; }
+  static const char* __s_getMD5Sum_() { return "d41d8cd98f00b204e9800998ecf8427e"; }
 public:
   ROS_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
 
   ROS_DEPRECATED const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
 
 private:
-  static const char* __s_getServerMD5Sum_() { return "2fb3aa2736d70ecbfc297d3d9b879661"; }
+  static const char* __s_getServerMD5Sum_() { return "7f00cbb798eafc9179d36917a87240f3"; }
 public:
   ROS_DEPRECATED static const std::string __s_getServerMD5Sum() { return __s_getServerMD5Sum_(); }
 
   ROS_DEPRECATED const std::string __getServerMD5Sum() const { return __s_getServerMD5Sum_(); }
 
 private:
-  static const char* __s_getMessageDefinition_() { return "bool result\n\
-\n\
+  static const char* __s_getMessageDefinition_() { return "\n\
 \n\
 "; }
 public:
@@ -152,21 +182,18 @@ public:
   ROS_DEPRECATED virtual uint8_t *serialize(uint8_t *write_ptr, uint32_t seq) const
   {
     ros::serialization::OStream stream(write_ptr, 1000000000);
-    ros::serialization::serialize(stream, result);
     return stream.getData();
   }
 
   ROS_DEPRECATED virtual uint8_t *deserialize(uint8_t *read_ptr)
   {
     ros::serialization::IStream stream(read_ptr, 1000000000);
-    ros::serialization::deserialize(stream, result);
     return stream.getData();
   }
 
   ROS_DEPRECATED virtual uint32_t serializationLength() const
   {
     uint32_t size = 0;
-    size += ros::serialization::serializationLength(result);
     return size;
   }
 
@@ -202,12 +229,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::ardrone2_mudd::ControlRequest_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "cba5e21e920a3a2b7b375cb65b64cdea";
+    return "7f00cbb798eafc9179d36917a87240f3";
   }
 
   static const char* value(const  ::ardrone2_mudd::ControlRequest_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0xcba5e21e920a3a2bULL;
-  static const uint64_t static_value2 = 0x7b375cb65b64cdeaULL;
+  static const uint64_t static_value1 = 0x7f00cbb798eafc91ULL;
+  static const uint64_t static_value2 = 0x79d36917a87240f3ULL;
 };
 
 template<class ContainerAllocator>
@@ -224,7 +251,11 @@ template<class ContainerAllocator>
 struct Definition< ::ardrone2_mudd::ControlRequest_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "string command\n\
+    return "int8 flag\n\
+float32 roll\n\
+float32 pitch\n\
+float32 gaz\n\
+float32 yaw\n\
 \n\
 ";
   }
@@ -232,6 +263,7 @@ struct Definition< ::ardrone2_mudd::ControlRequest_<ContainerAllocator> > {
   static const char* value(const  ::ardrone2_mudd::ControlRequest_<ContainerAllocator> &) { return value(); } 
 };
 
+template<class ContainerAllocator> struct IsFixedSize< ::ardrone2_mudd::ControlRequest_<ContainerAllocator> > : public TrueType {};
 } // namespace message_traits
 } // namespace ros
 
@@ -246,12 +278,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::ardrone2_mudd::ControlResponse_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "eb13ac1f1354ccecb7941ee8fa2192e8";
+    return "d41d8cd98f00b204e9800998ecf8427e";
   }
 
   static const char* value(const  ::ardrone2_mudd::ControlResponse_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0xeb13ac1f1354ccecULL;
-  static const uint64_t static_value2 = 0xb7941ee8fa2192e8ULL;
+  static const uint64_t static_value1 = 0xd41d8cd98f00b204ULL;
+  static const uint64_t static_value2 = 0xe9800998ecf8427eULL;
 };
 
 template<class ContainerAllocator>
@@ -268,8 +300,7 @@ template<class ContainerAllocator>
 struct Definition< ::ardrone2_mudd::ControlResponse_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "bool result\n\
-\n\
+    return "\n\
 \n\
 ";
   }
@@ -290,7 +321,11 @@ template<class ContainerAllocator> struct Serializer< ::ardrone2_mudd::ControlRe
 {
   template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
   {
-    stream.next(m.command);
+    stream.next(m.flag);
+    stream.next(m.roll);
+    stream.next(m.pitch);
+    stream.next(m.gaz);
+    stream.next(m.yaw);
   }
 
   ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -308,7 +343,6 @@ template<class ContainerAllocator> struct Serializer< ::ardrone2_mudd::ControlRe
 {
   template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
   {
-    stream.next(m.result);
   }
 
   ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -324,7 +358,7 @@ template<>
 struct MD5Sum<ardrone2_mudd::Control> {
   static const char* value() 
   {
-    return "2fb3aa2736d70ecbfc297d3d9b879661";
+    return "7f00cbb798eafc9179d36917a87240f3";
   }
 
   static const char* value(const ardrone2_mudd::Control&) { return value(); } 
@@ -344,7 +378,7 @@ template<class ContainerAllocator>
 struct MD5Sum<ardrone2_mudd::ControlRequest_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "2fb3aa2736d70ecbfc297d3d9b879661";
+    return "7f00cbb798eafc9179d36917a87240f3";
   }
 
   static const char* value(const ardrone2_mudd::ControlRequest_<ContainerAllocator> &) { return value(); } 
@@ -364,7 +398,7 @@ template<class ContainerAllocator>
 struct MD5Sum<ardrone2_mudd::ControlResponse_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "2fb3aa2736d70ecbfc297d3d9b879661";
+    return "7f00cbb798eafc9179d36917a87240f3";
   }
 
   static const char* value(const ardrone2_mudd::ControlResponse_<ContainerAllocator> &) { return value(); } 

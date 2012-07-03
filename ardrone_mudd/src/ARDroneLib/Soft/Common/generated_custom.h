@@ -7,7 +7,7 @@
 #  define STA
 #endif
 #define CURRENT_NUM_VERSION_SOFT "0.0.0"
-#define CURRENT_BUILD_DATE "2012-05-31 13:58"
+#define CURRENT_BUILD_DATE "2012-06-28 17:28"
 
 #define USE_VIDEO_YUV
 

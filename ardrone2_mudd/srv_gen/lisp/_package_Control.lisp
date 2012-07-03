@@ -1,6 +1,12 @@
 (cl:in-package ardrone2_mudd-srv)
-(cl:export '(COMMAND-VAL
-          COMMAND
-          RESULT-VAL
-          RESULT
+(cl:export '(FLAG-VAL
+          FLAG
+          ROLL-VAL
+          ROLL
+          PITCH-VAL
+          PITCH
+          GAZ-VAL
+          GAZ
+          YAW-VAL
+          YAW
 ))

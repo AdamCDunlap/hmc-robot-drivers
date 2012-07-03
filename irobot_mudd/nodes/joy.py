@@ -18,16 +18,16 @@ while True:
     pygame.event.pump()
 
     flag = 0
-    x = j.get_axis(0)
-    theta = j.get_axis(1)
+    x = -j.get_axis(1)
+    theta = j.get_axis(0)
 
     if abs(x) < .17:
       x = 0
     if abs(theta) < .17:
       theta = 0
 
-    speedl = (x * 250) + (theta * 250)
-    speedr = (x * 250) - (theta * 250)
+    speedl = (x * 300) + (theta * 250)
+    speedr = (x * 300) - (theta * 250)
     tank(speedl,speedr)
     rospy.sleep(.05)
 

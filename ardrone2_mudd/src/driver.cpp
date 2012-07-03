@@ -19,7 +19,7 @@ int main()
 C_RESULT ardrone_tool_init_custom(void)
 {
   /* Registering for a new device of game controller */
-  // ardrone_tool_input_add( &gamepad );
+   ardrone_tool_input_add( &rosControl );
 
   /* Start all threads of your application */
   START_THREAD( video_stage, NULL );
@@ -34,7 +34,7 @@ C_RESULT ardrone_tool_shutdown_custom(void)
   JOIN_THREAD( video_stage );
 
   /* Unregistering for the current device */
-  // ardrone_tool_input_remove( &gamepad );
+   ardrone_tool_input_remove( &rosControl );
 
   return C_OK;
 }
