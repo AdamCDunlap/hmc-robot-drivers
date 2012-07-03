@@ -18,9 +18,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
-#rosbuild_genmsg()
+rosbuild_genmsg()
 #uncomment if you have defined services
-#rosbuild_gensrv()
+rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
@@ -33,6 +33,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(SDKPATH src/ARDroneLib)
 include_directories(${SDKPATH} ${SDKPATH}/VP_SDK ${SDKPATH}/VP_SDK/VP_Os ${SDKPATH}/Soft/Lib ${SDKPATH}/VP_SDK/VP_Os/linux ${SDKPATH}/Soft/Common src/)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
-rosbuild_add_executable(driver src/driver.cpp src/Navdata/navdata.cpp src/Video/video_stage.cpp)
+rosbuild_add_executable(driver src/driver.cpp src/Navdata/navdata.cpp src/Video/video_stage.cpp src/Control/control.cpp)
 #rosbuild_add_executable(driver src/test.cpp)
-target_link_libraries(driver libpc_ardrone.a libsdk.a libswscale.a libavutil.a libavcodec.a libavdevice.a libavformat.a libavfilter.a libvlib.a)
+target_link_libraries(driver libsdk.a libpc_ardrone.a libsdk.a libswscale.a libavutil.a libavcodec.a libavdevice.a libavformat.a libavfilter.a libvlib.a)

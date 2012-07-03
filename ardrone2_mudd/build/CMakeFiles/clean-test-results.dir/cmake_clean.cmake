@@ -1,4 +1,10 @@
 FILE(REMOVE_RECURSE
+  "../msg_gen"
+  "../srv_gen"
+  "../src/ardrone2_mudd/msg"
+  "../src/ardrone2_mudd/srv"
+  "../msg_gen"
+  "../srv_gen"
   "CMakeFiles/clean-test-results"
 )
 

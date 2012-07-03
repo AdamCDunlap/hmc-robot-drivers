@@ -1,38 +1,18 @@
-/**
- * @file main.c
- * @author sylvain.gaeremynck@parrot.com
- * @date 2009/07/01
- */
 #include <driver.h>
-extern "C" 
-{
-//ARDroneLib
-#include <utils/ardrone_time.h>
-#include <ardrone_tool/Navdata/ardrone_navdata_client.h>
-#include <ardrone_tool/Control/ardrone_control.h>
-#include <ardrone_tool/UI/ardrone_input.h>
-
-//Common
-#include <config.h>
-#include <ardrone_api.h>
-
-//VP_SDK
-#include <ATcodec/ATcodec_api.h>
-#include <VP_Os/vp_os_print.h>
-#include <VP_Api/vp_api_thread_helper.h>
-#include <VP_Os/vp_os_signal.h>
-
-//Local project
-#include <Video/video_stage.h>
-}
 
 static int32_t exit_ihm_program = 1;
+ros::Publisher navP;
 
 /* Implementing Custom methods for the main function of an ARDrone application */
 int main()
 {
-	//return 42;
-  return ardrone_tool_main(0, NULL);
+  char* s = "hello";
+  int x = 1;
+  ros::init(x,&s,"ardrone2");
+  ros::NodeHandle nh("~");
+  navP = nh.advertise<ardrone2_mudd::navData>("navData",1);
+  controlSrv = nh->advertiseService("droneControl",controlCb);
+	return ardrone_tool_main(1, &s);
 }
 
 /* The delegate object calls this method during initialization of an ARDrone application */
@@ -76,5 +56,5 @@ C_RESULT signal_exit()
 BEGIN_THREAD_TABLE
   THREAD_TABLE_ENTRY( ardrone_control, 20 )
   THREAD_TABLE_ENTRY( navdata_update, 20 )
-  THREAD_TABLE_ENTRY( video_stage, 20 )
+//  THREAD_TABLE_ENTRY( video_stage, 20 )
 END_THREAD_TABLE

@@ -39,6 +39,8 @@ SET(CMAKE_C_INCLUDE_PATH
   "/opt/ros/electric/ros/core/roslib/include"
   "/opt/ros/electric/ros/tools/rospack"
   "/opt/ros/electric/ros/tools/rospack/include"
+  "../msg_gen/cpp/include"
+  "../srv_gen/cpp/include"
   "../src/ARDroneLib"
   "../src/ARDroneLib/VP_SDK"
   "../src/ARDroneLib/VP_SDK/VP_Os"

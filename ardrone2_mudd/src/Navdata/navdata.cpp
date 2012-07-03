@@ -1,9 +1,10 @@
+#include <Navdata/navdata.h>
+
 extern "C" {
 #include <ardrone_tool/Navdata/ardrone_navdata_client.h>
-
-#include <Navdata/navdata.h>
 #include <stdio.h>
 }
+
 
 /* Initialization local variables before event loop  */
 inline C_RESULT demo_navdata_client_init( void* data )
@@ -16,16 +17,35 @@ inline C_RESULT demo_navdata_client_process( const navdata_unpacked_t* const nav
 {
 	const navdata_demo_t*nd = &navdata->navdata_demo;
 
-	printf("=====================\nNavdata for flight demonstrations =====================\n\n");
+	//printf("=====================\nNavdata for flight demonstrations =====================\n\n");
+	//printf("Control state : %i\n",nd->ctrl_state);
+	//printf("Battery level : %i mV\n",nd->vbat_flying_percentage);
+	//printf("Orientation   : [Theta] %4.3f  [Phi] %4.3f  [Psi] %4.3f\n",nd->theta,nd->phi,nd->psi);
+	//printf("Altitude      : %i\n",nd->altitude);
+	//printf("Speed         : [vX] %4.3f  [vY] %4.3f  [vZPsi] %4.3f\n",nd->theta,nd->phi,nd->psi);
+	//printf("\033[8A");
 
-	printf("Control state : %i\n",nd->ctrl_state);
-	printf("Battery level : %i mV\n",nd->vbat_flying_percentage);
-	printf("Orientation   : [Theta] %4.3f  [Phi] %4.3f  [Psi] %4.3f\n",nd->theta,nd->phi,nd->psi);
-	printf("Altitude      : %i\n",nd->altitude);
-	printf("Speed         : [vX] %4.3f  [vY] %4.3f  [vZPsi] %4.3f\n",nd->theta,nd->phi,nd->psi);
+    if(ros::ok())
+    {
+        ardrone2_mudd::navData packet;
 
-	printf("\033[8A");
+        packet.tag = nd -> tag;
+        packet.size = nd -> size;
+        packet.ctrlState = nd -> ctrl_state;
+        packet.batLevel = nd -> vbat_flying_percentage;
+        packet.theta = nd -> theta;
+        packet.phi = nd -> phi;
+        packet.psi = nd -> psi;
+        packet.altitude = nd -> altitude;
+        packet.vx = nd -> vx;
+        packet.vy = nd -> vy;
+        packet.vz = nd -> vz;
+        packet.numFrames = nd -> num_frames;
 
+        navP.publish(packet);
+        // Maybe this shouldnt be here?
+        ros::spinOnce();
+    }
   return C_OK;
 }
 
