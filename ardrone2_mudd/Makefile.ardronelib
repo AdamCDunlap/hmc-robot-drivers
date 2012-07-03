@@ -7,7 +7,7 @@ all:
 	#cd $(SDKPATH) && make
 	mkdir -p lib/
 	cp $(SDKPATH)/Soft/Build/targets_versions/ardrone*/*.a lib/
-	cp $(SDKPATH)/Soft/Build/targets_versions/ffmpeg_x86*/*.a lib/
+	cp $(SDKPATH)/Soft/Build/targets_versions/ffmpeg_static*/*.a lib/
 	cp $(SDKPATH)/Soft/Build/targets_versions/sdk*/*.a lib/
 
 clean:

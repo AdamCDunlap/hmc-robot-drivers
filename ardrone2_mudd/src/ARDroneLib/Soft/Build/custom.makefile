@@ -37,9 +37,9 @@ WIFI_BROADCAST       = "192.168.1.255"
 
 ################## Video Options ##################
 # Tells if we want to record video on pc side
-RECORD_ENCODED_VIDEO     = no
-RECORD_RAW_VIDEO         = no
-RECORD_FFMPEG_VIDEO      = no
+RECORD_ENCODED_VIDEO     = yes
+RECORD_RAW_VIDEO         = yes
+RECORD_FFMPEG_VIDEO      = yes
 
 # Tells if we want to add vision data to video stream (in raw mode)
 # Vision data are saved into file only if we define RECORD_RAW_VIDEO too

@@ -56,5 +56,5 @@ C_RESULT signal_exit()
 BEGIN_THREAD_TABLE
   THREAD_TABLE_ENTRY( ardrone_control, 20 )
   THREAD_TABLE_ENTRY( navdata_update, 20 )
-//  THREAD_TABLE_ENTRY( video_stage, 20 )
+  THREAD_TABLE_ENTRY( video_stage, 20 )
 END_THREAD_TABLE

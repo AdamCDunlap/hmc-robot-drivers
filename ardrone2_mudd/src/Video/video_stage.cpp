@@ -38,7 +38,7 @@ extern "C"
 #include <ardrone_tool/Com/config_com.h>
 
 #ifndef RECORD_VIDEO
-#define RECORD_VIDEO
+//#define RECORD_VIDEO
 #endif
 #ifdef RECORD_VIDEO
 #    include <ardrone_tool/Video/video_stage_recorder.h>
@@ -46,8 +46,8 @@ extern "C"
 
 #include <ardrone_tool/Video/video_com_stage.h>
 
-#include "Video/video_stage.h"
 }
+#include "Video/video_stage.h"
 
 #define NB_STAGES 10
 
@@ -166,7 +166,8 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
   pipeline.nb_stages++;
 
   stages[pipeline.nb_stages].type    = VP_API_OUTPUT_SDL;
-  stages[pipeline.nb_stages].cfg     = NULL;
+  //stages[pipeline.nb_stages].cfg     = NULL;
+  stages[pipeline.nb_stages].cfg     = (void*)&vec;
   stages[pipeline.nb_stages].funcs   = vp_stages_output_gtk_funcs;
 
   pipeline.nb_stages++;
@@ -178,6 +179,7 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
   {
     PRINT("\n   Video stage thread initialisation\n\n");
 
+    pipeline.name = "test";
     res = vp_api_open(&pipeline, &pipeline_handle);
 
     if( SUCCEED(res) )

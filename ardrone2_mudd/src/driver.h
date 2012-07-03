@@ -19,8 +19,8 @@ extern "C" {
 #include <VP_Api/vp_api_thread_helper.h>
 #include <VP_Os/vp_os_signal.h>
 
-#include <Video/video_stage.h>
 }
+#include <Video/video_stage.h>
 
 #include "Control/control.h"
 #include <ros/ros.h>

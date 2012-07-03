@@ -35,4 +35,5 @@ include_directories(${SDKPATH} ${SDKPATH}/VP_SDK ${SDKPATH}/VP_SDK/VP_Os ${SDKPA
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 rosbuild_add_executable(driver src/driver.cpp src/Navdata/navdata.cpp src/Video/video_stage.cpp src/Control/control.cpp)
 #rosbuild_add_executable(driver src/test.cpp)
-target_link_libraries(driver libsdk.a libpc_ardrone.a libsdk.a libswscale.a libavutil.a libavcodec.a libavdevice.a libavformat.a libavfilter.a libvlib.a)
+#target_link_libraries(driver libpc_ardrone.a libvlib.a libswscale.a libavcodec.a libavutil.a libavdevice.a libavformat.a libavfilter.a libsdk.a libpc_ardrone.a SDL rt pthread)# libh264_dec_lib.a libbuf_api_lib.a)
+target_link_libraries(driver libpc_ardrone.a gtk-x11-2.0 rt sdk swscale avformat avcodec avutil vlib pthread pc_ardrone gtk-x11-2.0 rt) 
