@@ -14,7 +14,7 @@ ifndef USE_ANDROID
 USE_ANDROID          = no
 endif
 ifndef USE_LINUX
-USE_LINUX            = yes
+USE_LINUX            = no
 endif
 ifndef PROJECT
 # set default to ardrone2 for video TCP com.
@@ -38,8 +38,8 @@ WIFI_BROADCAST       = "192.168.1.255"
 ################## Video Options ##################
 # Tells if we want to record video on pc side
 RECORD_ENCODED_VIDEO     = yes
-RECORD_RAW_VIDEO         = yes
-RECORD_FFMPEG_VIDEO      = yes
+RECORD_RAW_VIDEO         = no
+RECORD_FFMPEG_VIDEO      = no
 
 # Tells if we want to add vision data to video stream (in raw mode)
 # Vision data are saved into file only if we define RECORD_RAW_VIDEO too

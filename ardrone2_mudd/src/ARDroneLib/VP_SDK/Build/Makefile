@@ -69,7 +69,6 @@ ifeq ($(USE_LIB),yes)
     TO_BUILD+=build_lib
 endif
 
-USE_APP=yes
 ifeq ($(USE_APP),yes)
     TO_BUILD+=build_app
 endif

@@ -6,8 +6,7 @@
  * ihm vision thread implementation
  *
  */
-extern "C" 
-{
+extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -19,10 +18,6 @@ extern "C"
 #include <sys/time.h>
 #include <time.h>
 
-#include <VP_Api/vp_api.h>
-#include <VP_Api/vp_api_error.h>
-#include <VP_Api/vp_api_stage.h>
-#include <VP_Api/vp_api_picture.h>
 #include <VP_Stages/vp_stages_io_file.h>
 #include <VP_Stages/vp_stages_i_camif.h>
 
@@ -32,10 +27,13 @@ extern "C"
 #include <VP_Os/vp_os_delay.h>
 #include <VP_Stages/vp_stages_yuv2rgb.h>
 #include <VP_Stages/vp_stages_buffer_to_picture.h>
-#include <VLIB/Stages/vlib_stage_decode.h>
 
 #include <ardrone_tool/ardrone_tool.h>
 #include <ardrone_tool/Com/config_com.h>
+
+#include <ardrone_tool/Video/video_com_stage.h>
+}
+#include <VP_Api/vp_api.h>
 
 #ifndef RECORD_VIDEO
 //#define RECORD_VIDEO
@@ -44,11 +42,14 @@ extern "C"
 #    include <ardrone_tool/Video/video_stage_recorder.h>
 #endif
 
-#include <ardrone_tool/Video/video_com_stage.h>
+#include <VP_Api/vp_api_error.h>
+#include <VP_Api/vp_api_stage.h>
+#include <VP_Api/vp_api_picture.h>
 
-}
+#include <VLIB/Stages/vlib_stage_decode.h>
 #include "Video/video_stage.h"
 
+#include <ros/ros.h>
 #define NB_STAGES 10
 
 PIPELINE_HANDLE pipeline_handle;
@@ -56,35 +57,39 @@ PIPELINE_HANDLE pipeline_handle;
 static uint8_t*  pixbuf_data       = NULL;
 static vp_os_mutex_t  video_update_lock = PTHREAD_MUTEX_INITIALIZER;
 
-C_RESULT output_gtk_stage_open( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
+C_RESULT output_ros_stage_open( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
 {
+  printf("OPEN\n");
   return (SUCCESS);
 }
 
-C_RESULT output_gtk_stage_transform( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
+C_RESULT output_ros_stage_transform( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
 {
   vp_os_mutex_lock(&video_update_lock);
  
   /* Get a reference to the last decoded picture */
   pixbuf_data      = (uint8_t*)in->buffers[0];
+  printf("trans\n");
+  printf("%i\n",pixbuf_data[0]);
 
   vp_os_mutex_unlock(&video_update_lock);
 
   return (SUCCESS);
 }
 
-C_RESULT output_gtk_stage_close( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
+C_RESULT output_ros_stage_close( void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)
 {
   return (SUCCESS);
+  printf("close\n");
 }
 
 
-const vp_api_stage_funcs_t vp_stages_output_gtk_funcs =
+const vp_api_stage_funcs_t vp_stages_ros_output_funcs =
 {
   NULL,
-  (vp_api_stage_open_t)output_gtk_stage_open,
-  (vp_api_stage_transform_t)output_gtk_stage_transform,
-  (vp_api_stage_close_t)output_gtk_stage_close
+  (vp_api_stage_open_t)output_ros_stage_open,
+  (vp_api_stage_transform_t)output_ros_stage_transform,
+  (vp_api_stage_close_t)output_ros_stage_close
 };
 
 DEFINE_THREAD_ROUTINE(video_stage, data)
@@ -166,9 +171,9 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
   pipeline.nb_stages++;
 
   stages[pipeline.nb_stages].type    = VP_API_OUTPUT_SDL;
-  //stages[pipeline.nb_stages].cfg     = NULL;
-  stages[pipeline.nb_stages].cfg     = (void*)&vec;
-  stages[pipeline.nb_stages].funcs   = vp_stages_output_gtk_funcs;
+  stages[pipeline.nb_stages].cfg     = NULL;
+  //stages[pipeline.nb_stages].cfg     = (void*)&vec;
+  stages[pipeline.nb_stages].funcs   = vp_stages_ros_output_funcs;
 
   pipeline.nb_stages++;
 
@@ -179,7 +184,6 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
   {
     PRINT("\n   Video stage thread initialisation\n\n");
 
-    pipeline.name = "test";
     res = vp_api_open(&pipeline, &pipeline_handle);
 
     if( SUCCEED(res) )

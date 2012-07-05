@@ -6,7 +6,6 @@
  * ihm vision thread implementation
  *
  */
-#include "Video/video_stage.h"
 extern "C" 
 {
 #include <stdio.h>
@@ -20,6 +19,9 @@ extern "C"
 #include <sys/time.h>
 #include <time.h>
 
+#include <ardrone_tool/ardrone_tool.h>
+#include <ardrone_tool/Com/config_com.h>
+}
 #include <VP_Api/vp_api.h>
 #include <VP_Api/vp_api_error.h>
 #include <VP_Api/vp_api_stage.h>
@@ -33,10 +35,7 @@ extern "C"
 #include <VP_Os/vp_os_delay.h>
 #include <VP_Stages/vp_stages_yuv2rgb.h>
 #include <VP_Stages/vp_stages_buffer_to_picture.h>
-#include <VLIB/Stages/vlib_stage_decode.h>
 
-#include <ardrone_tool/ardrone_tool.h>
-#include <ardrone_tool/Com/config_com.h>
 
 #ifndef RECORD_VIDEO
 //#define RECORD_VIDEO
@@ -47,7 +46,8 @@ extern "C"
 
 #include <ardrone_tool/Video/video_com_stage.h>
 
-}
+#include <VLIB/Stages/vlib_stage_decode.h>
+#include "Video/video_stage.h"
 
 #define NB_STAGES 10
 
@@ -135,7 +135,7 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
 
   yuv2rgbconf.rgb_format = VP_STAGES_RGB_FORMAT_RGB24;
 #ifdef RECORD_VIDEO
-  vrc.fp = NULL; //fopen("test","w+");
+  vrc.fp = NULL;
 #endif
 
   pipeline.nb_stages = 0;
@@ -147,11 +147,11 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
   pipeline.nb_stages++;
 
 #ifdef RECORD_VIDEO
-//  stages[pipeline.nb_stages].type    = VP_API_FILTER_DECODER;
-//  stages[pipeline.nb_stages].cfg     = (void*)&vrc;
-//  stages[pipeline.nb_stages].funcs   = video_recorder_funcs;
-//
-//  pipeline.nb_stages++;
+  stages[pipeline.nb_stages].type    = VP_API_FILTER_DECODER;
+  stages[pipeline.nb_stages].cfg     = (void*)&vrc;
+  stages[pipeline.nb_stages].funcs   = video_recorder_funcs;
+
+  pipeline.nb_stages++;
 #endif // RECORD_VIDEO
   stages[pipeline.nb_stages].type    = VP_API_FILTER_DECODER;
   stages[pipeline.nb_stages].cfg     = (void*)&vec;
@@ -166,8 +166,8 @@ DEFINE_THREAD_ROUTINE(video_stage, data)
   pipeline.nb_stages++;
 
   stages[pipeline.nb_stages].type    = VP_API_OUTPUT_SDL;
-  stages[pipeline.nb_stages].cfg     = (void*)&vec;
-  //stages[pipeline.nb_stages].cfg     = NULL;
+  stages[pipeline.nb_stages].cfg     = NULL;
+  //stages[pipeline.nb_stages].cfg     = (void*)&vec;
   stages[pipeline.nb_stages].funcs   = vp_stages_output_gtk_funcs;
 
   pipeline.nb_stages++;

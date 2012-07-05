@@ -122,7 +122,11 @@ C_RESULT vlib_stage_decoding_close(vlib_stage_decoding_config_t *cfg)
     stream.bytes = NULL;
   }
   else
+  {
+    printf("before\n");
     cfg->controller.in_stream.bytes = NULL;
+  }
+  printf("after\n");
     
   return video_codec_close( &cfg->controller );
 }

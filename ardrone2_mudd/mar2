@@ -1,0 +1,17 @@
+SDKPATH = src/ARDroneLib
+SDK_FLAGS += "USE_APP=yes"
+SDK_FLAGS += "APP_ID=ros"
+SDK_FLAGS += "USE_SDK=yes"
+all:
+	@$(MAKE) -C $(SDKPATH)/Soft/Build $(SDK_FLAGS) USE_LINUX=yes
+	#cd $(SDKPATH) && make
+	mkdir -p lib/
+	cp $(SDKPATH)/Soft/Build/targets_versions/ardrone*/*.a lib/
+	cp $(SDKPATH)/Soft/Build/targets_versions/ffmpeg_static*/*.a lib/
+	cp $(SDKPATH)/Soft/Build/targets_versions/sdk*/*.a lib/
+
+clean:
+	@$(MAKE) -C $(SDKPATH)/Soft/Build clean
+	rm lib/*.a
+
+
