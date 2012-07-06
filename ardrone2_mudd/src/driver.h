@@ -26,6 +26,7 @@ extern "C" {
 #include <ros/ros.h>
 #include <ardrone2_mudd/navData.h>
 #include <image_transport/image_transport.h>
+#include "video.h"
 extern ros::Publisher navP;
 extern image_transport::Publisher imageP;
 C_RESULT signal_exit();
