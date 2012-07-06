@@ -80,6 +80,8 @@ CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/ardrone2_mudd/Control.h
 ../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/pluginlib/manifest.xml
 ../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/ros_comm/utilities/message_filters/manifest.xml
 ../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/image_common/image_transport/manifest.xml
+../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/vision_opencv/opencv2/manifest.xml
+../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/vision_opencv/cv_bridge/manifest.xml
 ../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/generated
 ../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
 ../srv_gen/cpp/include/ardrone2_mudd/Config.h: /opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated
@@ -127,6 +129,8 @@ CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/ardrone2_mudd/Control.h
 ../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/pluginlib/manifest.xml
 ../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/ros_comm/utilities/message_filters/manifest.xml
 ../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/image_common/image_transport/manifest.xml
+../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/vision_opencv/opencv2/manifest.xml
+../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/vision_opencv/cv_bridge/manifest.xml
 ../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/generated
 ../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
 ../srv_gen/cpp/include/ardrone2_mudd/Control.h: /opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated

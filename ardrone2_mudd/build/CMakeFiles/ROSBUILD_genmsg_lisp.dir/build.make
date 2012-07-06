@@ -80,6 +80,8 @@ CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_navData.lisp
 ../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/pluginlib/manifest.xml
 ../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/ros_comm/utilities/message_filters/manifest.xml
 ../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/image_common/image_transport/manifest.xml
+../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/vision_opencv/opencv2/manifest.xml
+../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/vision_opencv/cv_bridge/manifest.xml
 ../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/generated
 ../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
 ../msg_gen/lisp/navData.lisp: /opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated

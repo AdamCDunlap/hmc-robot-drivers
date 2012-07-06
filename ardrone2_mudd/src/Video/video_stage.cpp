@@ -36,7 +36,7 @@ extern "C" {
 #include <VP_Api/vp_api.h>
 
 #ifndef RECORD_VIDEO
-//#define RECORD_VIDEO
+#define RECORD_VIDEO
 #endif
 #ifdef RECORD_VIDEO
 #    include <ardrone_tool/Video/video_stage_recorder.h>
@@ -50,6 +50,8 @@ extern "C" {
 #include "Video/video_stage.h"
 
 #include <ros/ros.h>
+#include <cv_bridge/CvBridge.h>
+#include "driver.h"
 #define NB_STAGES 10
 
 PIPELINE_HANDLE pipeline_handle;
@@ -69,9 +71,20 @@ C_RESULT output_ros_stage_transform( void *cfg, vp_api_io_data_t *in, vp_api_io_
  
   /* Get a reference to the last decoded picture */
   pixbuf_data      = (uint8_t*)in->buffers[0];
+
+  
+  IplImage *frame;
+  frame=cvCreateImage(cvSize(320,240), IPL_DEPTH_8U, 3);
+  frame->imageData = (char *)pixbuf_data;
+  cvCvtColor(frame,frame,CV_BGR2RGB);
+  
+
+  sensor_msgs::ImagePtr msg = sensor_msgs::CvBridge::cvToImgMsg(frame,"bgr8");
+
   printf("trans\n");
   printf("%i\n",pixbuf_data[0]);
 
+  imageP.publish(msg);
   vp_os_mutex_unlock(&video_update_lock);
 
   return (SUCCESS);

@@ -83,6 +83,8 @@ CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package_Control.lisp
 ../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/pluginlib/manifest.xml
 ../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/ros_comm/utilities/message_filters/manifest.xml
 ../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/image_common/image_transport/manifest.xml
+../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/vision_opencv/opencv2/manifest.xml
+../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/vision_opencv/cv_bridge/manifest.xml
 ../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/generated
 ../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
 ../srv_gen/lisp/Config.lisp: /opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated
@@ -133,6 +135,8 @@ CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package_Control.lisp
 ../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/pluginlib/manifest.xml
 ../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/ros_comm/utilities/message_filters/manifest.xml
 ../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/image_common/image_transport/manifest.xml
+../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/vision_opencv/opencv2/manifest.xml
+../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/vision_opencv/cv_bridge/manifest.xml
 ../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/generated
 ../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
 ../srv_gen/lisp/Control.lisp: /opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated

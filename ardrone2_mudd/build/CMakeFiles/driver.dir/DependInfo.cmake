@@ -6,7 +6,6 @@ SET(CMAKE_DEPENDS_LANGUAGES
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/src/Control/control.cpp" "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/build/CMakeFiles/driver.dir/src/Control/control.o"
   "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/src/Navdata/navdata.cpp" "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/build/CMakeFiles/driver.dir/src/Navdata/navdata.o"
-  "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/src/Video/video_stage.cpp" "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/build/CMakeFiles/driver.dir/src/Video/video_stage.o"
   "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/src/driver.cpp" "/home/robotics/ros_workspace/hmc-robot-drivers/ardrone2_mudd/build/CMakeFiles/driver.dir/src/driver.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
@@ -14,6 +13,11 @@ SET(CMAKE_CXX_COMPILER_ID "GNU")
 # Preprocessor definitions for this target.
 SET(CMAKE_TARGET_DEFINITIONS
   "USE_LINUX=yes"
+  "FFMPEG_SUPPORT=no"
+  "USE_VIDEO_TCP=yes"
+  "USE_VIDEO_HD=no"
+  "ITTIAM_SUPPORT=no"
+  "__STDC_CONSTANT_MACROS"
   )
 
 # Targets to which this target links.

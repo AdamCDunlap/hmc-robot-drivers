@@ -15,17 +15,19 @@ extern "C" {
 
 //VP_SDK
 #include <ATcodec/ATcodec_api.h>
+#include <ardrone_tool/ardrone_version.h>
 #include <VP_Os/vp_os_print.h>
 #include <VP_Api/vp_api_thread_helper.h>
 #include <VP_Os/vp_os_signal.h>
-
+#include <ardrone_tool/Video/video_stage.h>
 }
-#include <Video/video_stage.h>
 
 #include "Control/control.h"
 #include <ros/ros.h>
 #include <ardrone2_mudd/navData.h>
+#include <image_transport/image_transport.h>
 extern ros::Publisher navP;
+extern image_transport::Publisher imageP;
 C_RESULT signal_exit();
 
 #endif // _DRIVER_H_

@@ -389,21 +389,6 @@ src/Navdata/navdata.s:
 .PHONY : src/Navdata/navdata.s
 
 # target to build an object file
-src/Video/video_stage.o:
-	$(MAKE) -f CMakeFiles/driver.dir/build.make CMakeFiles/driver.dir/src/Video/video_stage.o
-.PHONY : src/Video/video_stage.o
-
-# target to preprocess a source file
-src/Video/video_stage.i:
-	$(MAKE) -f CMakeFiles/driver.dir/build.make CMakeFiles/driver.dir/src/Video/video_stage.i
-.PHONY : src/Video/video_stage.i
-
-# target to generate assembly for a file
-src/Video/video_stage.s:
-	$(MAKE) -f CMakeFiles/driver.dir/build.make CMakeFiles/driver.dir/src/Video/video_stage.s
-.PHONY : src/Video/video_stage.s
-
-# target to build an object file
 src/driver.o:
 	$(MAKE) -f CMakeFiles/driver.dir/build.make CMakeFiles/driver.dir/src/driver.o
 .PHONY : src/driver.o
@@ -452,9 +437,6 @@ help:
 	@echo "... src/Navdata/navdata.o"
 	@echo "... src/Navdata/navdata.i"
 	@echo "... src/Navdata/navdata.s"
-	@echo "... src/Video/video_stage.o"
-	@echo "... src/Video/video_stage.i"
-	@echo "... src/Video/video_stage.s"
 	@echo "... src/driver.o"
 	@echo "... src/driver.i"
 	@echo "... src/driver.s"

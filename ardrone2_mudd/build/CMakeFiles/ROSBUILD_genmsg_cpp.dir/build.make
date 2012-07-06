@@ -78,6 +78,8 @@ CMakeFiles/ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/ardrone2_mudd/navData.h
 ../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/pluginlib/manifest.xml
 ../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/ros_comm/utilities/message_filters/manifest.xml
 ../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/image_common/image_transport/manifest.xml
+../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/vision_opencv/opencv2/manifest.xml
+../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/vision_opencv/cv_bridge/manifest.xml
 ../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/generated
 ../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
 ../msg_gen/cpp/include/ardrone2_mudd/navData.h: /opt/ros/electric/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated

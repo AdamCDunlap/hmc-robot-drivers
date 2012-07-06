@@ -6,6 +6,11 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # Preprocessor definitions for this target.
 SET(CMAKE_TARGET_DEFINITIONS
   "USE_LINUX=yes"
+  "FFMPEG_SUPPORT=no"
+  "USE_VIDEO_TCP=yes"
+  "USE_VIDEO_HD=no"
+  "ITTIAM_SUPPORT=no"
+  "__STDC_CONSTANT_MACROS"
   )
 
 # Targets to which this target links.
