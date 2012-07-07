@@ -22,13 +22,21 @@ extern "C" {
 #include <ardrone_tool/Video/video_stage.h>
 }
 
-#include "Control/control.h"
+#include "control.h"
 #include <ros/ros.h>
 #include <ardrone2_mudd/navData.h>
 #include <image_transport/image_transport.h>
 #include "video.h"
+#include <ardrone2_mudd/Config.h>
+
 extern ros::Publisher navP;
 extern image_transport::Publisher imageP;
+extern int currentCamera;
+extern std::string frontFrame;
+extern std::string downFrame;
+
+bool configCb(ardrone2_mudd::Config::Request &req, 
+               ardrone2_mudd::Config::Response &res);
 C_RESULT signal_exit();
 
 #endif // _DRIVER_H_

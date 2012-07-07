@@ -10,3 +10,4 @@ float32 vx
 float32 vy
 float32 vz
 uint32 numFrames
+uint32 wifiQuality

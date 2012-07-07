@@ -3,7 +3,7 @@
 # Common build definitions (CUSTOM)
 #########################################################
 
-RELEASE_BUILD        = no
+RELEASE_BUILD        = yes
 QUIET_BUILD          = yes
 VPSDK_PARALLEL_BUILD = no
 
