@@ -1,0 +1,15 @@
+<package>
+  <description brief="kinect_pan">
+
+     kinect_pan
+
+  </description>
+  <author>robotics</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kinect_pan</url>
+  <depend package="dynamixel_controllers"/>
+
+</package>
+
+
