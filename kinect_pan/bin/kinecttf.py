@@ -10,8 +10,8 @@ def jcb(data):
   br.sendTransform((0,0,0),
       tf.transformations.quaternion_from_euler(0,0,data.current_pos),
       rospy.Time.now(),
-      "pan_base",
-      "openni_camera")
+      "openni_camera",
+      "pan_base")
 
 if __name__ == '__main__':
   rospy.init_node("kinecttf")
