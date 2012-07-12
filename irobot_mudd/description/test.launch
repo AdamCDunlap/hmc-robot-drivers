@@ -1,0 +1,4 @@
+<launch>
+  <param name="robot_description" textfile="$(find irobot_mudd)/description/testurdf.xml"/>
+  <node pkg="rviz" name="rviz" type="rviz"/>
+</launch>

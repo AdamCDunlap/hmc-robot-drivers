@@ -7,6 +7,7 @@ from std_msgs import msg
 import rospy
 import pygame
 
+print "waiting"
 rospy.wait_for_service("tank")
 tank = rospy.ServiceProxy("tank", Tank)
 servoP = rospy.Publisher("/pan_controller/command", msg.Float64)

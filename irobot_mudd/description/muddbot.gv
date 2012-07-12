@@ -1,0 +1,8 @@
+digraph G {
+node [shape=box];
+"main" [label="main"];
+"camera" [label="camera"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"main" -> "joint1" [label="xyz: -0.1143 0 0.4191 \nrpy: 0 -0 0"]
+"joint1" -> "camera"
+}
