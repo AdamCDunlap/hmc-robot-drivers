@@ -1,0 +1,3 @@
+<launch>
+  <param name="robot_description" textfile="$(find irobot_mudd)/description/muddbot.xml"/>
+</launch>
