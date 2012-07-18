@@ -13,4 +13,5 @@
                     update_rate: 20
         </rosparam>
     </node>
+    <node name="pantf" pkg="irobot_mudd" type="kinecttf.py"/>
 </launch>

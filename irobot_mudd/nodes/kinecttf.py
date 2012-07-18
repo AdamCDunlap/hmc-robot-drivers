@@ -7,7 +7,7 @@ from dynamixel_msgs import msg
 
 def jcb(data):
   global br
-  br.sendTransform((0,0,0),
+  br.sendTransform((0,0,.04),
       tf.transformations.quaternion_from_euler(0,0,data.current_pos),
       rospy.Time.now(),
       "openni_camera",
