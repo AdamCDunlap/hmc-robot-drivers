@@ -18,5 +18,4 @@ if __name__ == '__main__':
   br = tf.TransformBroadcaster()
   rospy.init_node("kinecttf")
   rospy.Subscriber("/pan_controller/state", msg.JointState,jcb)
-  print "spinning"
   rospy.spin()

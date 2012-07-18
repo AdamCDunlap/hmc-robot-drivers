@@ -1,25 +1,4 @@
-#include "config.hpp"
-
-#include <string>
-#include <sstream>
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-
-//C_RESULT configStart( void )
-//{
-//  return C_OK;
-//}
-//
-//C_RESULT configSend( void )
-//{
-//  return C_OK;
-//}
-//
-//C_RESULT configEnd( void )
-//{
-//  return C_OK;
-//}
+#include "config.h"
 
 bool configCb(ardrone2_mudd::Config::Request &req, 
                ardrone2_mudd::Config::Response &res)
@@ -30,12 +9,24 @@ bool configCb(ardrone2_mudd::Config::Request &req,
        std::istream_iterator<std::string>(),
        std::back_inserter<std::vector<std::string> >(command));
 
-  //printf("Command: %s", req.command);
-  if (command[0].compare("camera"))
-  {
+  printf("Command: %s \n", command[0].c_str());
+  if (command[0].compare("camera") == 0) {
     int channel = atoi(command[1].c_str());
-    if ((channel >= 1) && (channel <= 4))
-      ardrone_application_default_config.video_channel = channel;
+    if ((channel >= 0) && (channel <= 4))
+    {
+      if (channel == 4)
+        currentCamera = (currentCamera + 1)%3;
+      else
+        currentCamera = channel;
+      ARDRONE_TOOL_CONFIGURATION_ADDEVENT(video_channel, &channel, NULL);
+    }
+  } else if (command[0].compare("anim") == 0) {
+    char buffer[128];
+    int anim = atoi(command[1].c_str());
+    snprintf(buffer,sizeof(buffer),"%i,%i",anim, MAYDAY_TIMEOUT[anim]);
+    ARDRONE_TOOL_CONFIGURATION_ADDEVENT(flight_anim, buffer, NULL);
+  } else if (command[0].compare("retrim") == 0) {
+    ardrone_at_set_flat_trim();
   }
   
   return true;
