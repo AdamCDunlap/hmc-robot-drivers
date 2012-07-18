@@ -74,14 +74,10 @@ class Monitor(Thread):
             )
 
     def run(self):
-        count = 0
         while(len(self.watchdog) == 0):
-            count += 1
             then = datetime.now()
             self.sendAll() #send queued commands
 
-            if count % 3 == 0:
-              next
             self.create.send(149,len(self.packets),*[i[0] for i in self.packets]) #read sensor packets
             self.sendAll() 
 
@@ -133,7 +129,7 @@ class Create:
         """constructor for the Create, takes in a single argument: the serial port"""
 
         self.timeout = 5
-        self.period = .04
+        self.period = .12
         self.runRef = []
         self.packetRef = []
         self.queueLock = Lock()
