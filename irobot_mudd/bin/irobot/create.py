@@ -129,7 +129,7 @@ class Create:
         """constructor for the Create, takes in a single argument: the serial port"""
 
         self.timeout = 5
-        self.period = .12
+        self.period = .24444
         self.runRef = []
         self.packetRef = []
         self.queueLock = Lock()
