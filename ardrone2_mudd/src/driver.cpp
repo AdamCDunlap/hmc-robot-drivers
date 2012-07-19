@@ -58,12 +58,12 @@ C_RESULT ardrone_tool_shutdown_custom(void)
 /* The event loop calls this method for the exit condition */
 bool_t ardrone_tool_exit()
 {
-  ros::shutdown();
   return C_OK;
 }
 
 C_RESULT signal_exit()
 {
+  ros::shutdown();
   return C_OK;
 }
 
