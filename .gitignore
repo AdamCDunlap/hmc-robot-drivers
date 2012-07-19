@@ -2,7 +2,7 @@ cmake_install.cmake
 build/
 bin/
 lib/
-msg_gen/
-src_gen/
+msg_gen/*
+src_gen/*
 *.o
 *.pyc
