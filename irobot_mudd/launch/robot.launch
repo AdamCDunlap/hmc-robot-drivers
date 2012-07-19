@@ -12,7 +12,7 @@
   <include file="$(find irobot_mudd)/launch/kinectpan/controller_spawner.launch"/>
   <!-- MuddBot -->
   <node name="muddbot" pkg="irobot_mudd" type="driver.py">
-    <param name="port" value="/dev/ttyUSB1"/>
+    <param name="port" value="/dev/ttyUSB0"/>
   </node> 
 
   <!-- openni_manager -->
