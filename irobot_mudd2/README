@@ -1,0 +1,85 @@
+irobot_mudd
+based on the irobot_create drivers from Brown
+modified by Alistair Dobke summer 2012
+
+This is a ros package for controlling the irobot create from ros. It is 
+essentially a copy of the brown irobot create (www.ros.org/wiki/irobot_create_2_1) 
+modified in summer 2012 to suit out needs.
+
+INSTALL
+
+Put the irobot_mudd folder in your ros workspace or ros package path.
+
+-
+If you don't know where that is try the following command in terminal
+
+>>> echo $ROS_WORKSPACE
+>>> echo $ROS_PACKAGE_PATH
+
+To add a directory to the path add the following to your ~/.bashrc
+
+export ROS_WORKSPACE=$ROS_WORKSPACE:/home/robotics/myworkspace
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:/home/robotics/myworkspace
+-
+
+Then run rosmake irobot_mudd
+
+USAGE
+
+This package provides the following services:
+
+circle (untested)
+  Inputs: Speed Radius
+  Moves the robot in a Radius mm circle at Speed mm/s
+demo
+  Inputs: Num
+  Runs the demo Num (see the create documentation for the different demos)
+dock:
+  Inputs: Num
+  Num == 0:  create finds a docking station and then charges (will not accept any other commands!).
+         1:  wake up the robot from its charging state (Undo the above command).
+         2:  create docks then immediately wakes up and is ready to accept commands.
+leds (untested)
+  Inputs: 
+song
+  Inputs: [notes] [durations]
+  Plays the input song.  Durations are 64ths of seconds and cannot be below 4.  60 is middle c 
+  (see create documentation).
+
+  Example call: rosservice call song [60,62,64,65,67] [8,8,8,8,8]
+tank
+  Inputs: Lspeed Rspeed
+  Sets the wheel speeds of the robot accordingly.  Max speed is 500.  If a speed is above 500 
+  then the speeds are just set proportionally with the bigger speed set to 500
+
+  Example call: rosservice call tank 50 50
+                rosservice call tank -- -100 -100
+turn (untested)
+
+This package provides the follow topic
+
+Sensorpacket
+
+
+
+MODIFICATION:
+
+A quick rundown.  
+
+srv/  Describes the inputs that each service requires
+msg/  Describes the output of each topic
+bin/  
+  -- driver.py  Describes how to handle an incoming service request
+                Usually just makes calls to the below.
+
+  -- irobot/create.py  This is where the connection to the create is handled
+                       Specific opcodes are sent the create
+
+
+
+
+See examples/ for some demo code!
+If you are reading this during summer 2012 and want something changed or find a bug, talk to me (Alistair)!
+
+
+
