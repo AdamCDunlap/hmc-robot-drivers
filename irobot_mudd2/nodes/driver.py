@@ -19,43 +19,38 @@ import cmd,sys,signal,os,serial
 
 class CreateDriver:
     def __init__(self,port):
-      self.create = Create(port)
+      self.create = create.Create(port)
       self.packetPub = rospy.Publisher('~sensorData', SensorPacket)
       self.odomPub = rospy.Publisher('/odom',Odometry)
       self.odomBroadcaster = TransformBroadcaster()
       self.fields = ['wheeldropCaster','wheeldropLeft','wheeldropRight','bumpLeft','bumpRight','wall','cliffLeft','cliffFronLeft','cliffFrontRight','cliffRight','virtualWall','infraredByte','advance','play','distance','angle','chargingState','voltage','current','batteryTemperature','batteryCharge','batteryCapacity','wallSignal','cliffLeftSignal','cliffFrontLeftSignal','cliffFrontRightSignal','cliffRightSignal','homeBase','internalCharger','songNumber','songPlaying','x','y','theta','chargeLevel']
       self.then = datetime.now() 
-      self.dist = 0
-      self.th   = 0
-      self.x    = 0
-      self.y    = 0
+      self.dist  = 0
+      self.theta = 0
+      self.x     = 0
+      self.y     = 0
       self.last = rospy.Time.now()
       self.baseFrame = rospy.get_param("~base_frame","/base_link")
       self.odomFrame = rospy.get_param("~odom_frame","/odom")
 
-
-    def odomUpdate(self):
-      now = rospy.Time.now()
-      ddist = self.create.getSensor('DISTANCE') / 1000
-      dth   = self.create.getSensor('DISTANCE') / 180
+    def odomUpdate(self,timer):
+      ddist = self.create.getSensor('DISTANCE') / 1000.0
+      dth   = self.create.getSensor('ANGLE') * pi/180.0
 
       self.dist  += ddist
       self.theta += dth
 
-      if (th != 0):
-        self.th += th
-
       if (ddist != 0):
-        dx = cos(th)*d
-        dy = -sin(th)*d
-        self.x += (cos(self.th)*dx - sin(self.th)*dy)
-        self.y += (sin(self.th)*dx + cos(self.th)*dy)
+        dx = cos(dth)*ddist
+        dy = -sin(dth)*ddist
+        self.x += (cos(self.theta)*dx - sin(self.theta)*dy)
+        self.y += (sin(self.theta)*dx + cos(self.theta)*dy)
 
       quaternion = Quaternion()
       quaternion.x = 0.0 
       quaternion.y = 0.0
-      quaternion.z = sin(self.th/2)
-      quaternion.w = cos(self.th/2)
+      quaternion.z = sin(self.theta/2)
+      quaternion.w = cos(self.theta/2)
 
       self.odomBroadcaster.sendTransform(
           (self.x, self.y, 0), 
@@ -74,12 +69,12 @@ class CreateDriver:
       odom.pose.pose.orientation = quaternion
 
       odom.child_frame_id = self.baseFrame
-      odom.twist.twist.linear.x = dx / (now - self.last
-      odom.twist.twist.linear.y = 0
-      odom.twist.twist.angular.z = dth
+      if timer.last_duration:
+        odom.twist.twist.linear.x = ddist / timer.last_duration
+        odom.twist.twist.linear.y = 0
+        odom.twist.twist.angular.z = dth / timer.last_duration
 
       self.odomPub.publish(odom)
-      self.last = now
 
 
     #def sense(self):
@@ -243,7 +238,7 @@ class prompt(cmd.Cmd):
         try:
             left = int(lineS[0])
             right = int(lineS[1])
-            self.robot.tank(left,right)
+            self.robot.driveDirect(left,right)
         except:
             print "Invalid arguments " + line
 
@@ -254,13 +249,14 @@ class prompt(cmd.Cmd):
     def quit(self,*args):
         print "\nTrying to quit gracefully, if all else fails try ctrl-\\"
         rospy.core.signal_shutdown('keyboard interrupt')
-        self.robot.create.shutdown()
+        self.robot.shutdown()
         sys.exit(0)
 
 if __name__ == '__main__':
+    print "Starting..."
     node = rospy.init_node('irobot_mudd')
     port = rospy.get_param('~port', "/dev/ttyUSB0")
-    rate = rospy.get_param('~odom_rate', "15")
+    rate = rospy.get_param('~odom_rate', 15)
 
     if(not os.path.exists(port)):
         print rospy.resolve_name('~port')
@@ -284,10 +280,10 @@ if __name__ == '__main__':
     #rospy.Service('~circle',Circle,driver.circle)
     rospy.Service('~demo',Demo,driver.demo)
     rospy.Service('~leds',Leds,driver.leds)
-    rospy.Service('~tank',Tank,driver.tank)
+    rospy.Service('tank',Tank,driver.tank)
     #rospy.Service('~turn',Turn,driver.turn)
     #rospy.Service('~dock',Dock,driver.dock)
-    rospy.Service('~song',Song,driver.song)
+    #rospy.Service('~song',Song,driver.song)
 
     rospy.Subscriber("cmd_vel", Twist, driver.twist)
 

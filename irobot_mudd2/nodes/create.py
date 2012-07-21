@@ -396,7 +396,7 @@ class Create(object):
             time.sleep(0.3)
             self.toFullMode()
             
-        self.serialLock = _thread.allocate_lock()
+        self.serialLock = thread.allocate_lock()
 
         #self.setLEDs(80,255,0,0) # MB: was 100, want more yellowish        
 
@@ -408,7 +408,7 @@ class Create(object):
             print str(bytes1).encode('Latin-1')
             self.sim_sock.send( (str(bytes1).encode('Latin-1')) )
         else:
-            self.ser.write( (str(bytes1).encode('Latin-1')) )
+            self.ser.write( str(bytes1) )
 
     def read(self, str):
         message = ""

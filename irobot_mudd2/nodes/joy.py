@@ -8,8 +8,8 @@ import rospy
 import pygame
 
 print "waiting"
-rospy.wait_for_service("tank")
-tank = rospy.ServiceProxy("tank", Tank)
+rospy.wait_for_service("/tank")
+tank = rospy.ServiceProxy("/tank", Tank)
 servoP = rospy.Publisher("/pan_controller/command", msg.Float64)
 rospy.init_node("joy_controller")
 print "connected"
@@ -28,8 +28,8 @@ while True:
     if abs(theta) < .17:
       theta = 0
 
-    speedl = (x * 300) + (theta * 250)
-    speedr = (x * 300) - (theta * 250)
+    speedl = (x * 100) + (theta * 75)
+    speedr = (x * 100) - (theta * 75)
     tank(speedl,speedr)
     
     if j.get_button(3):
