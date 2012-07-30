@@ -1,10 +1,6 @@
-irobot_mudd
-based on the irobot_create drivers from Brown
+irobot_mudd2
+Based on latest pycreate
 modified by Alistair Dobke summer 2012
-
-This is a ros package for controlling the irobot create from ros. It is 
-essentially a copy of the brown irobot create (www.ros.org/wiki/irobot_create_2_1) 
-modified in summer 2012 to suit out needs.
 
 INSTALL
 

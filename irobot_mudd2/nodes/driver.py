@@ -20,6 +20,7 @@ import cmd,sys,signal,os,serial
 class CreateDriver:
     def __init__(self,port):
       self.create = create.Create(port)
+      self.create.playSong(((70,8),(72,8),(68,8),(56,8),(63,8)))
       self.packetPub = rospy.Publisher('~sensorData', SensorPacket)
       self.odomPub = rospy.Publisher('/odom',Odometry)
       self.odomBroadcaster = TransformBroadcaster()
@@ -183,7 +184,6 @@ class CreateDriver:
     #        self.create.restart()
     #    return DockResponse(True)
 
-    """ Added summer 2012 """
     def opCode(self,opCode):
         self.create.send(opCode)
 
@@ -201,9 +201,12 @@ class CreateDriver:
     #    else:
     #        self.create.forwardTurn(int(x),int(x/th))
 
-    # def song(self,req):
-    #     self.create.playFullSong(req.notes,req.durations)
-    #     return SongResponse(True)
+    def song(self,req):
+      song = zip(req.notes,req.durations)
+      for x in xrange(0, len(song), 16):
+        self.create.playSong(song[x:x+16])
+        sleep( sum( req.durations[x:x+16])/64.0)
+      return SongResponse(True)
 
 class prompt(cmd.Cmd):
     def __init__(self,robot):
@@ -283,7 +286,7 @@ if __name__ == '__main__':
     rospy.Service('tank',Tank,driver.tank)
     #rospy.Service('~turn',Turn,driver.turn)
     #rospy.Service('~dock',Dock,driver.dock)
-    #rospy.Service('~song',Song,driver.song)
+    rospy.Service('~song',Song,driver.song)
 
     rospy.Subscriber("cmd_vel", Twist, driver.twist)
 
