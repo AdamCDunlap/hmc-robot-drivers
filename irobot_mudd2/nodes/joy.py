@@ -28,8 +28,8 @@ while True:
     if abs(theta) < .17:
       theta = 0
 
-    speedl = (x * 100) + (theta * 75)
-    speedr = (x * 100) - (theta * 75)
+    speedl = (x * 300) + (theta * 250)
+    speedr = (x * 300) - (theta * 250)
     tank(speedl,speedr)
     
     if j.get_button(3):
