@@ -1,0 +1,22 @@
+<package>
+  <description brief="ardrone2_mudd_gazebo">
+
+     ardrone2_mudd_gazebo
+
+  </description>
+  <author>robotics</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ardrone2_mudd_gazebo</url>
+  <depend package="rospy"/>
+  <depend package="gazebo"/>
+  <depend package="ardrone2_mudd"/>
+  <depend package="tf" />
+
+  <export>
+    <gazebo gazebo_media_path="${prefix}"/>
+  </export>
+
+</package>
+
+
