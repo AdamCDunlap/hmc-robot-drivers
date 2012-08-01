@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <robot name="ardrone">
-
+  <origin xyz=".25 0 0"/>
   <link name="base_link">
     <inertial>
       <origin xyz="0 0 0"/>
-      <mass value="1.0"/>
+      <mass value="2.0"/>
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
     <visual>
-      <origin xyz=".25 0 0 "/>
+      <origin xyz="0 0 0 "/>
       <geometry>
         <box size="0.5 0.5 0.035"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz=".25 0 0 "/>
+      <origin xyz="0 0 0 "/>
       <geometry>
         <box size="0.5 0.5 0.035"/>
       </geometry>
@@ -50,7 +50,7 @@
   </gazebo>
 
   <joint name="front_camera_joint" type="fixed">
-    <origin xyz=".5 0 0" rpy="0 0 0"/>
+    <origin xyz=".25 0 0" rpy="0 0 0"/>
     <parent link="base_link"/>
     <child link="front_camera_link"/>
   </joint>
@@ -66,7 +66,7 @@
       <controller:gazebo_ros_camera name="front_camera_controller" plugin="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>20.0</updateRate>
-        <imageTopicName>/ardrone2/image</imageTopicName>
+        <imageTopicName>/ardrone2/camera/image</imageTopicName>
         <frameName>front_camera_link</frameName>
         <interface:camera name="front_camera_iface" />
       </controller:gazebo_ros_camera>
