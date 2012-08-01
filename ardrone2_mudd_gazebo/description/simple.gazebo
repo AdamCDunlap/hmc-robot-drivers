@@ -1,0 +1,20 @@
+<model:physical name="box_model">
+<xyz> 0 1.5 0.5</xyz>
+<rpy> 0.0 0.0 0.0 </rpy>
+<canonicalBody>box1_body</canonicalBody>
+<static>false</static>
+
+<body:box name="box_body">
+<xyz> 0.0 0.0 0.0 </xyz>
+<rpy> 0.0 0.0 0.0 </rpy>
+
+<geom:box name="box_geom">
+<xyz> 0.0 0.0 0.0 </xyz>
+<rpy> 0.0 0.0 0.0 </rpy>
+<mesh>default</mesh>
+<size>1 1 1</size>
+<density>1.0 </density>
+<material>Gazebo/BumpyMetal</material>
+</geom:box>
+</body:box>
+</model:physical>
