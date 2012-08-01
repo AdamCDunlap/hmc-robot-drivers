@@ -30,5 +30,5 @@
     <remap from="cloud" to="cloud_throttled"/>
   </node>
 
-  <node pkg="rosbag" type="record" name="rb" args="odom tf scan /camera/rgb/image_color /camera/depth/image"/>
+  <node pkg="rosbag" type="record" name="rb" args="odom tf scan /camera/rgb/image_color /camera/depth/image /camera/rgb/camera_info"/>
 </launch>
