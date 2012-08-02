@@ -21,7 +21,7 @@ class Ardrone():
     self.heli = rospy.ServiceProxy(controlName, Control, persistent=True)
     print "\r Connecting to config service"
     rospy.wait_for_service('ardrone2/config')
-    self.config = rospy.ServiceProxy(self.configSource, Config)
+    self.config = rospy.ServiceProxy(configName, Config)
     print "\r Connected to services"
 
     print "\r Subscribing to navData"
@@ -63,7 +63,7 @@ class Ardrone():
     self.ctrlState = 0
 
     # Base speed for drone.
-    self.keyPower = .07
+    self.keyPower = .5
 
     # Reset the drone !!
     self.send(4,0,0,0,0)
@@ -94,14 +94,15 @@ class Ardrone():
     self.lastConfigSent = configStr
     self.config(configStr)
 
-  def setCam(self):
+  def setCam(self, camNum = 0):
+    self.cameraNumber = camNum
     print "Setting camera source to %s " % self.cameraSources[self.cameraNumber]
-    self.configSend("camera %i" % self.camera_number)
+    self.configSend("camera %i" % self.cameraNumber)
 
   def send(self,flag,phi,theta,gaz,yaw):
     self.lastsent = flag,phi,theta,gaz,yaw
     self.heli(flag,phi,theta,gaz,yaw)    
-    rospy.sleep(.05)
+    #rospy.sleep(1.0)
 
   def spinLeft(self,power):
     self.send(0,0,0,0,-power)
@@ -175,13 +176,10 @@ class Ardrone():
         self.send(0,0,0,0,0)
         helistr = 3,0,0,0,0
         # Take Off
-        # Why is the above there...why hover then take off?
     elif char == '1':
-        self.camera_number = 0
         self.setCam()
     elif char == '2':
-        self.camera_number = 1
-        self.setCam()
+        self.setCam(1)
     elif char == "3":
           print "Battery Level", self.batLevel
     elif self.airborne:
@@ -227,16 +225,16 @@ class Ardrone():
             sgaz = self.keyPower
         elif char == 'b':
             sgaz = -self.keyPower
-        elif c == '4':
+        elif char == '4':
             self.configSend("anim 16")
             self.send(0,0,0,0,0)
-        elif c == '5':
+        elif char == '5':
             self.configSend("anim 17")
             self.send(0,0,0,0,0)
-        elif c == '6':
+        elif char == '6':
             self.configSend("anim 18")
             self.send(0,0,0,0,0)
-        elif c == '7':
+        elif char == '7':
             self.configSend("anim 19")
             self.send(0,0,0,0,0)            
         else:
