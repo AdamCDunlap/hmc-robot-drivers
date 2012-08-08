@@ -90,22 +90,22 @@
     </light>
   </model:renderable>
 
-  <model:physical name="walls_map">
-   <xyz>10.0 10.0 0.0</xyz>	
-   <rpy>0 0 0</rpy>
-   <static>true</static>
-   <body:map name="walls_map_body">
-     <geom:map name="walls_map_geom">
-       <image>lab10.png</image>
-       <threshold>200</threshold>
-       <granularity>1</granularity>
-       <negative>false</negative>
-       <scale>2.00</scale>
-       <offset>0 0 0</offset>
-       <material>Gazebo/Rocky</material>
-     </geom:map>
-   </body:map>
- </model:physical>
+  <!-- <model:physical name="walls_map">   -->
+  <!--  <xyz>10.0 10.0 0.0</xyz>	         -->
+  <!--  <rpy>0 0 0</rpy>                   -->
+  <!--  <static>true</static>              -->
+  <!--  <body:map name="walls_map_body">   -->
+  <!--    <geom:map name="walls_map_geom"> -->
+  <!--      <image>lab10.png</image>       -->
+  <!--      <threshold>200</threshold>     -->
+  <!--      <granularity>1</granularity>   -->
+  <!--      <negative>false</negative>     -->
+  <!--      <scale>2.00</scale>            -->
+  <!--      <offset>0 0 0</offset>         -->
+  <!--      <material>Gazebo/Rocky</material>-->
+  <!--    </geom:map>                      -->
+  <!--  </body:map>                        -->
+  <!--</model:physical>                    -->
 
   <model:physical name="box">
     <xyz>0 2 1</xyz>
