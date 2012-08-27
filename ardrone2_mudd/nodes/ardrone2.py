@@ -129,125 +129,102 @@ class Ardrone():
     self.send(0,0,0,-power,0)
 
   def hover(self):
-    self.send(1,0,0,0,0)
+    self.send(0,0,0,0,0)
 
   def takeoff(self):
     if not self.airborne:
+      print "takeoff"
       self.airborne = True
       self.send(3,0,0,0,0)
+      rospy.sleep(1)
+      self.hover()
 
   def land(self):
     self.airborne = False
+    self.hover
+    rospy.sleep(0.5)
     self.send(2,0,0,0,0)
     
   def reset(self):
     self.airborne = False
     self.send(4,0,0,0,0)
 
-  def getKeyPress(self):
-    char = chr(cv.WaitKey() % 255)
+  def getKeyPress(self, time = ()):
+    if type(time) != type(()):
+      time = (time,)
+    char = chr(cv.WaitKey(*time) % 255)
     self.keyCmd(char)
     return char
 
   def keyCmd(self,char):
-    sflag = 0
-    sphi = 0
-    stheta = 0
-    sgaz = 0
-    syaw = 0
-    sgaz = 0
-
-    helistr = ''
-    if char == ' ':
-        self.airborne = False
-        helistr = 2,0,0,0,0
-        # Landing
+    if char == -1:
+        self.send(self.lastsent)
+    elif char == ' ':
+        self.land() # Landing
     elif char == 'h':
-      self.send(2,0,0,0,0)
-      # Landing
-      sys.exit(0)
+        self.land() # Landing
+        sys.exit(0)
     elif char == 'r':
-        self.airborne = False
-        helistr = 4,0,0,0,0
-        # Resetting
+        self.reset() # Resetting
     elif char == 't':
-        print "takeoff"
-        self.airborne = True
-        self.send(0,0,0,0,0)
-        helistr = 3,0,0,0,0
-        # Take Off
+        self.takeoff() # Take Off
     elif char == '1':
         self.setCam()
     elif char == '2':
         self.setCam(1)
     elif char == "3":
-          print "Battery Level", self.batLevel
+        print "Battery Level", self.batLevel
     elif self.airborne:
+        sflag  = 1 
+        sphi   = 0
+        stheta = 0
+        sgaz   = 0
+        syaw   = 0
+        sgaz   = 0
         if char == 'w':
-            sflag = 1
             stheta = -self.keyPower
         elif char == 'x':
-            sflag = 1
             stheta = self.keyPower
         elif char == 'a':
-            sflag = 1
             sphi = -self.keyPower  
         elif char == 'd':
-            sflag = 1
             sphi = self.keyPower  
         elif char == 'e':
-            sflag = 1
             stheta = -math.sqrt(self.keyPower/2)
             sphi = math.sqrt(self.keyPower/2)  
         elif char == 'z':
-            sflag = 1
             stheta = math.sqrt(self.keyPower/2)
             sphi = -math.sqrt(self.keyPower/2)  
         elif char == 'q':
-            sflag = 1
             stheta = -math.sqrt(self.keyPower/2)
             sphi = -math.sqrt(self.keyPower/2)  
         elif char == 'c':
-            sflag = 1
             stheta = math.sqrt(self.keyPower/2)
             sphi = math.sqrt(self.keyPower/2)  
-        elif char == 's': #Self-adjusting hover
-            self.send(1,0,0,0,0)
-            rospy.sleep(.05)
-            sflag = 0
-        elif char == '3': #Non-adjusting hover
-            sflag = 1
-        elif char == 'g':
-            syaw = self.keyPower
-        elif char == 'f':
-            syaw = -self.keyPower
-        elif char == 'v':
-            sgaz = self.keyPower
-        elif char == 'b':
-            sgaz = -self.keyPower
-        elif char == '4':
-            self.configSend("anim 16")
-            self.send(0,0,0,0,0)
-        elif char == '5':
-            self.configSend("anim 17")
-            self.send(0,0,0,0,0)
-        elif char == '6':
-            self.configSend("anim 18")
-            self.send(0,0,0,0,0)
-        elif char == '7':
-            self.configSend("anim 19")
-            self.send(0,0,0,0,0)            
         else:
-            #self.send(self.lastsent)
-            # The part above might now work because
-            # The last sent could be made a tuple.
-            return
-          
-        helistr = sflag,sphi,stheta,sgaz,syaw
-        
-    if not helistr == '':
-      sflag, sphi, stheta, sgaz, syaw = helistr
-      self.send(sflag,sphi,stheta,sgaz,syaw)
+            sflag = 0
+            if char == 's': #Self-adjusting hover
+                sflag = 0
+            elif char == '0': #Non-adjusting hover
+                sflag = 1
+            elif char == 'g':
+                syaw = self.keyPower
+            elif char == 'f':
+                syaw = -self.keyPower
+            elif char == 'v':
+                sgaz = self.keyPower
+            elif char == 'b':
+                sgaz = -self.keyPower
+            elif char == '4':
+                self.configSend("anim 16")
+            elif char == '5':
+                self.configSend("anim 17")
+            elif char == '6':
+                self.configSend("anim 18")
+            elif char == '7':
+                self.configSend("anim 19")
+
+        self.send(sflag, sphi, stheta, sgaz, syaw)
 
 if __name__ == "__main__":
   controller = Ardrone()
