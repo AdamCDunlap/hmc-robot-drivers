@@ -153,6 +153,7 @@ class CreateDriver:
     def twist(self,req):
         x = req.linear.x*1000.
         th = req.angular.z
+        print (x,th)
         if (x == 0):
             th = th*180/pi
             speed = (8*pi*th)/9

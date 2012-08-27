@@ -188,9 +188,9 @@ class CreateDriver:
         self.create.send(opCode)
 
     def twist(self,req):
-        x = req.linear.x*1000.
+        x = req.linear.x*100.
         th = req.angular.z
-        self.create.go(x,th)
+        self.create.go(x,th*180.0/pi)
     #    if (x == 0):
     #        th = th*180/pi
     #        speed = (8*pi*th)/9

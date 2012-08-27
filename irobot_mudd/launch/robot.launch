@@ -1,15 +1,15 @@
 <launch>
   <!-- kinect -->
   <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
-    args="-.1143 0.0 .4728 0.0 0.0 0.0 base_link pan_base 40" />
+    args="-.1143 0.0 .4728 0.0 0.0 0.0 base_link openni_camera 40" />
 
   <param name="robot_description" textfile="$(find irobot_mudd)/description/muddbot.xml"/>
 
 
   <include file="$(find openni_camera)/launch/openni_node.launch"/>
 
-  <include file="$(find irobot_mudd)/launch/kinectpan/controller_manager.launch"/>
-  <include file="$(find irobot_mudd)/launch/kinectpan/controller_spawner.launch"/>
+  <!--<include file="$(find irobot_mudd)/launch/kinectpan/controller_manager.launch"/> -->
+  <!--<include file="$(find irobot_mudd)/launch/kinectpan/controller_spawner.launch"/> -->
   <!-- MuddBot -->
   <node name="muddbot" pkg="irobot_mudd" type="driver.py">
     <param name="port" value="/dev/ttyUSB0"/>
