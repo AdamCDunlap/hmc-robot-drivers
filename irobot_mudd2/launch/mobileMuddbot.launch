@@ -1,27 +1,29 @@
 <launch>
-  <!-- kinect -->
+  <!-- static -->
   <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
-    args="-.1143 0.0 .4728 0.0 0.0 0.0 base_link pan_base 40" />
+    args="-.1143 0.0 .4891 0.0 0.0 0.0 base_link pan_base 40" />
 
+  <!-- Robot Model -->
   <param name="robot_description" textfile="$(find irobot_mudd2)/description/muddbot.xml"/>
 
-
+  <!-- kinect -->
   <include file="$(find openni_camera)/launch/openni_node.launch"/>
-
+ 
+  <!-- servo -->
   <include file="$(find irobot_mudd2)/launch/kinectpan/controller_manager.launch"/>
   <include file="$(find irobot_mudd2)/launch/kinectpan/controller_spawner.launch"/>
-  <!-- MuddBot -->
-  <node name="muddbot" pkg="irobot_mudd2" type="driver.py" output="screen">
-    <param name="port" value="/dev/ttyUSB1"/>
-  </node> 
 
-  <node name="joystickControl" pkg="irobot_mudd2" type="joy.py" output="screen" />
+  <!-- MuddBot -->
+  <node name="muddbot" pkg="irobot_mudd2" type="driver.py">
+    <param name="port" value="/dev/ttyUSB0"/>
+  </node> 
+  <node name="joystick" pkg="irobot_mudd2" type="joy.py"/>
 
   <!-- openni_manager -->
   <node pkg="nodelet" type="nodelet" name="openni_manager" output="screen" respawn="true" args="manager"/>
 
   <node pkg="nodelet" type="nodelet" name="cloud_throttle" args="load pointcloud_to_laserscan/CloudThrottle openni_manager">
-    <param name="max_rate" value="15"/>
+    <param name="max_rate" value="5"/>
     <remap from="cloud_in" to="/camera/depth/points"/>
     <remap from="cloud_out" to="cloud_throttled"/>
   </node>
@@ -34,4 +36,7 @@
     <param name="min_height" value="-.2"/>
     <param name="max_height" value=".2"/>
   </node>
+
+  <!-- recording -->
+  <node pkg="rosbag" type="record" name="rb" args="odom tf scan"/><!-- /camera/rgb/image_color /camera/depth/image /camera/rgb/camera_info"/>-->
 </launch>
