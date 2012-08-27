@@ -34,7 +34,7 @@ C_RESULT ardrone_tool_init_custom(void)
      ardrone_application_default_config.video_codec = H264_720P_CODEC;
    else
    {
-     ardrone_application_default_config.flying_mode = FLYING_MODE_HOVER_ON_TOP_OF_ORIENTED_ROUNDEL;
+     //ardrone_application_default_config.flying_mode = FLYING_MODE_HOVER_ON_TOP_OF_ORIENTED_ROUNDEL;
      ardrone_application_default_config.video_codec = UVLC_CODEC;
    }
    videoInit();
