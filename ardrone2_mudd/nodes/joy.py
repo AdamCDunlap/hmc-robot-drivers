@@ -23,6 +23,7 @@ def navDataUpdate(data):
 
 rospy.wait_for_service("ardrone2/heli")
 heli = rospy.ServiceProxy("ardrone2/heli", Control)
+config = rospy.ServiceProxy("ardrone2/config", Config)
 rospy.Subscriber("ardrone2/navData",navData, navDataUpdate, queue_size=1)
 print "connected"
 
@@ -45,6 +46,14 @@ while True:
         heli(2,0,0,0,0)
     if j.get_button(0):
         heli(4,0,0,0,0)
+
+    if j.get_button(9):
+      config("anim 18")
+
+    if j.get_button(4):
+      config("camera 1")
+    if j.get_button(5):
+      config("camera 0")
 
     if abs(phi) < .17:
         phi = 0

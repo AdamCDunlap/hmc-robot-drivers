@@ -19,7 +19,7 @@ import cmd,sys,signal,os,serial
 
 class CreateDriver:
     def __init__(self,port):
-      self.create = create.Create(port)
+      self.create = create.Create(port,3)
       self.create.playSong(((70,8),(72,8),(68,8),(56,8),(63,8)))
       self.packetPub = rospy.Publisher('~sensorData', SensorPacket)
       self.odomPub = rospy.Publisher('/odom',Odometry)
