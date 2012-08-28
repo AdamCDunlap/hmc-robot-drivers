@@ -5,7 +5,4 @@
 
   <!-- MuddBot Backbone -->
   <include file="$(find irobot_mudd2)/launch/backboneR.launch"/>
-
-  <!-- joystick -->
-  <node name="joystick" pkg="irobot_mudd2" type="joy.py"/>
 </launch>

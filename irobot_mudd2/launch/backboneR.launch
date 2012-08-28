@@ -28,4 +28,8 @@
     <param name="min_height" value="-.2"/>
     <param name="max_height" value=".2"/>
   </node>
+
+  <!-- recording -->
+  <!-- Other topics you might want: /camera/rgb/image_color /camera/depth/image /camera/rgb/camera_info"/>-->
+  <node pkg="rosbag" type="record" name="rb" args="odom tf scan -o /home/robotics/scanOdomTf"/>
 </launch>
