@@ -4,8 +4,12 @@
     args="-.1143 0.0 .4728 0.0 0.0 0.0 base_link openni_camera 40" />
 
   <!-- MuddBot Backbone -->
-  <include file="$(find irobot_mudd2)/launch/backboneR.launch"/>
+  <include file="$(find irobot_mudd2)/launch/backbone.launch"/>
 
   <!-- joystick -->
   <node name="joystick" pkg="irobot_mudd2" type="joy.py"/>
+
+  <!-- recording -->
+  <!-- Other topics you might want: /camera/rgb/image_color /camera/depth/image /camera/rgb/camera_info"/>-->
+  <node pkg="rosbag" type="record" name="rb" args="odom tf scan -o /home/robotics/scanOdomTf"/>
 </launch>
