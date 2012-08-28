@@ -37,5 +37,5 @@
   </node>
 
   <!-- recording -->
-  <node pkg="rosbag" type="record" name="rb" args="odom tf scan"/><!-- /camera/rgb/image_color /camera/depth/image /camera/rgb/camera_info"/>-->
+  <node pkg="rosbag" type="record" name="rb" output="screen" args="odom tf scan -o /home/robotics/mobileRobot"/><!-- /camera/rgb/image_color /camera/depth/image /camera/rgb/camera_info"/>-->
 </launch>
