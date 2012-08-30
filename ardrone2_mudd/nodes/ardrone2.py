@@ -157,10 +157,7 @@ class Ardrone():
     return char
 
   def keyCmd(self,char):
-    print "in keyCmd ", ord(char)
     if char == chr(254):
-        #self.send(self.lastsent)
-        print "No key grabbed!"
         return
     elif char == ' ':
         self.land() # Landing
