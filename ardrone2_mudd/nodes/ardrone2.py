@@ -3,9 +3,7 @@ from ardrone2_mudd.srv import *
 from ardrone2_mudd.msg import *
 from std_msgs.msg import String
 import rospy
-import cv
-import math
-import sys
+import cv, math, random, sys
 
 #############################################
 ####   Same as "ardrone.py", but with    ####
@@ -144,13 +142,38 @@ class Ardrone():
 
   def land(self):
     self.airborne = False
+    #self.send(2,0,0,0,0)
     self.hover
-    rospy.sleep(0.5)
+    #rospy.sleep(0.5)
     self.send(2,0,0,0,0)
     
   def reset(self):
     self.airborne = False
     self.send(4,0,0,0,0)
+
+  def frontFlip(self):
+    print "%sI'm doing a front flip!!!" % self.aLittleExcitement()
+    self.configSend("anim 16")
+
+  def backFlip(self):
+    print "%sI'm doing a back flip!!!" % self.aLittleExcitement()
+    self.configSend("anim 17")
+
+  def leftBarrelRoll(self):
+    print "%sI'm rolling left!!!" % self.aLittleExcitement()
+    self.configSend("anim 18")
+
+  def rightBarrelRoll(self):
+    print "%sI'm rolling right!!!" % self.aLittleExcitement()
+    self.configSend("anim 19")
+
+  def aLittleExcitement(self):
+    if random.random() < 0.33:
+      return "Wheeeee!!!! "
+    elif random.random() < 0.5:
+      return "Look at me go!!!!! "
+    else:
+      return ""
 
   def getKeyPress(self, time = ()):
     if type(time) != tuple:
@@ -221,13 +244,13 @@ class Ardrone():
             elif char == chr(84): #up arrow key
                 sgaz = -self.keyPower
             elif char == '4':
-                self.configSend("anim 16")
+                self.frontFlip()
             elif char == '5':
-                self.configSend("anim 17")
+                self.backFlip()
             elif char == '6':
-                self.configSend("anim 18")
+                self.leftBarrelRoll()
             elif char == '7':
-                self.configSend("anim 19")
+                self.rightBarrelRoll()
 
         self.send(sflag, sphi, stheta, sgaz, syaw)
 
