@@ -70,7 +70,7 @@ class Ardrone():
 
     # The Opencv Windows
     cv.NamedWindow('control')
-    cv.MoveWindow('control', 200, 500)
+    cv.MoveWindow('control', 1260, 20)
 
     print "Ready"
 
