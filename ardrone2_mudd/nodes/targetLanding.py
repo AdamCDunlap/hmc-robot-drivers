@@ -52,8 +52,7 @@ class myArdrone(ardrone2.Ardrone):
         self.forward(forwardBackPower)
         self.strafeRight(leftRightPower)
         self.down(downPower)
-        
-       
+
     def bBoxUpdate(self, data):
         #Format is: "CenterX (in percent of box width) CenterY (in percent of box height)
         #            Area (in percent of box area) LeftEdge (in percent of box width)

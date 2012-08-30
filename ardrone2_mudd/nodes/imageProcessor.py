@@ -6,13 +6,13 @@ import rospy
 import time,sys,random,cv,cv_bridge,math,os
 import threading
 
-#You'll likely use "/ardrone2/camera/image" for the drone.
+# You'll likely use "/ardrone2/camera/image" for the drone.
 IMAGE_SOURCE = "/ardrone2/camera/image"
 
 class ImageProcessor:
 
   def __init__(self):
-    #Setting up the publisher to broadcast the data.
+    # Setting up the publisher to broadcast the data.
     self.publisher = rospy.Publisher('imageData', String)
 
     self.thresholds = {'low_red': 0, 'high_red': 256,\
@@ -31,14 +31,15 @@ class ImageProcessor:
     cv.SetMouseCallback('threshold', self.onMouse2, None)
     self.make_control_window()
     self.bridge = cv_bridge.CvBridge()
-    self.image = None             # the image from the drone
+    self.image = None                   # the image from the drone
     self.new_image = False              # did we just receive a new image?
     self.threshed_image = None          # thresholded image
     self.contours_found = False
     
-    #If you want to use text on the image, uncomment the line below.
+    # If you want to use text on the image, uncomment the line below.
     # it sets the font to something readable. 
-    #self.font = cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1)
+    #
+    # self.font = cv.InitFont(cv.CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1)
     
     # Drag And Drop data members.
     self.mouse_down = False
@@ -64,11 +65,11 @@ class ImageProcessor:
   def make_control_window(self):
     """ a method to make a window full of sliders """
     
-    #Create slider window
+    # Create slider window
     cv.NamedWindow('sliders')
     cv.MoveWindow('sliders', 742, 100)
     
-    #Create sliders
+    # Create sliders
     cv.CreateTrackbar('low_red', 'sliders', self.thresholds['low_red'], 256, self.change_low_red)
     cv.CreateTrackbar('high_red', 'sliders', self.thresholds['high_red'], 256, self.change_high_red)
     cv.CreateTrackbar('low_green', 'sliders', self.thresholds['low_green'], 256, self.change_low_green)
@@ -82,7 +83,7 @@ class ImageProcessor:
     cv.CreateTrackbar('low_val', 'sliders', self.thresholds['low_val'], 256, self.change_low_val)
     cv.CreateTrackbar('high_val', 'sliders', self.thresholds['high_val'], 256, self.change_high_val)
 
-  #Functions for changing the slider values  
+  # Functions for changing the slider values  
   def change_low_red(self, new_threshold):
     self.thresholds['low_red'] = new_threshold
   def change_high_red(self, new_threshold):
@@ -115,7 +116,7 @@ class ImageProcessor:
         This should be called only if self.image is NOT None
         but self.threshed_image IS None
     """
-    #Find the size of the images
+    # Find the size of the images
     self.size = cv.GetSize(self.image)
 
     self.red = cv.CreateImage(self.size, 8, 1)     # color components
@@ -146,7 +147,7 @@ class ImageProcessor:
       width -= 20
     elif flags == cv.CV_EVENT_FLAG_SHIFTKEY:
       width += 20
-    # if the left button was clicked
+    # if the right button was clicked
     if event == cv.CV_EVENT_RBUTTONDOWN:
       bgrTuple = tuple(map(lambda(v) :(max(int(v)-width,0),min(int(v)+width,256)),self.image[y,x]))
       hsvTuple = tuple(map(lambda(v) :(max(int(v)-width,0),min(int(v)+width,256)),self.hsv[y,x]))
@@ -215,7 +216,7 @@ class ImageProcessor:
                 in_range = False
 
             if in_range:
-              # Know it isn't part of a subtracted region
+              # Now it isn't part of a subtracted region
               (b,g,r) = self.image[y,x]
               (h,s,v) = self.hsv[y,x]
               allv = [r,g,b, h, s, v]

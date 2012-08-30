@@ -150,15 +150,18 @@ class Ardrone():
     self.send(4,0,0,0,0)
 
   def getKeyPress(self, time = ()):
-    if type(time) != type(()):
+    if type(time) != tuple:
       time = (time,)
     char = chr(cv.WaitKey(*time) % 255)
     self.keyCmd(char)
     return char
 
   def keyCmd(self,char):
-    if char == -1:
-        self.send(self.lastsent)
+    print "in keyCmd ", ord(char)
+    if char == chr(254):
+        #self.send(self.lastsent)
+        print "No key grabbed!"
+        return
     elif char == ' ':
         self.land() # Landing
     elif char == 'h':

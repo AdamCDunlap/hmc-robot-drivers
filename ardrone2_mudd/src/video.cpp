@@ -57,8 +57,8 @@ C_RESULT output_ros_stage_transform( video_decoder_config_t *cfg, vp_api_io_data
   //bimg.encoding ="bgr8";
 
   sensor_msgs::ImagePtr msg = sensor_msgs::CvBridge::cvToImgMsg(frame,"bgr8");
-  msg->height = stream_height;
-  msg->width = stream_width;
+  //msg->height = stream_height;
+  //msg->width = stream_width;
   if ((currentCamera == 0) || (currentCamera == 2))
     msg->header.frame_id = frontFrame;
   else
