@@ -33,15 +33,18 @@ class Ardrone():
     h: quit
     t: takeoff              r: reset    enter/return(space): land
     1: use forward camera               2: use bottom camera
+    3: print battery level              4: do a front flip
+    5: do a back flip                   6: do a left barrel roll
+    7: do a right barrel roll
 
     q: forward left strafe  w: forward  e: forward right strafe
     a: strafe left          s: hover    d: strafe right
     z: backward left strafe x: backward e: backward right strafe
 
-    f: spin left
-    g: spin right
-    v: up
-    b: down
+    left arrow:  spin left
+    right arrow: spin right
+    up arrow:    up
+    down arrow:  down
     """
     
 
@@ -157,6 +160,8 @@ class Ardrone():
     return char
 
   def keyCmd(self,char):
+    #The line below is useful if ever picking new keys. 
+    #print ord(char)
     if char == chr(254):
         return
     elif char == ' ':
@@ -207,13 +212,13 @@ class Ardrone():
                 sflag = 0
             elif char == '0': #Non-adjusting hover
                 sflag = 1
-            elif char == 'g':
+            elif char == chr(83): #right arrow key
                 syaw = self.keyPower
-            elif char == 'f':
+            elif char == chr(81): #left arrow key
                 syaw = -self.keyPower
-            elif char == 'v':
+            elif char == chr(82): #down arrow key
                 sgaz = self.keyPower
-            elif char == 'b':
+            elif char == chr(84): #up arrow key
                 sgaz = -self.keyPower
             elif char == '4':
                 self.configSend("anim 16")
