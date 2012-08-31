@@ -64,6 +64,10 @@ class Ardrone():
     self.batLevel  = 0 
     self.ctrlState = 0
 
+    # Drone constants:
+    self.downCamLensAng  = math.radians(64)
+    self.frontCamLensAng = math.radians(92)
+
     # Base speed for drone.
     self.keyPower = .5
 
