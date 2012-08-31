@@ -51,6 +51,7 @@ class Ardrone():
 
     # Camera Sources
     self.cameraSources = {0: "front camera", 1: "ground camera"}
+    self.setCam()
 
     # Navdata fields (partial)
     self.altitude  = 0 
@@ -77,9 +78,9 @@ class Ardrone():
 
   def navDataUpdate(self,data):
     self.altitude  = data.altitude
-    self.phi       = data.phi
-    self.psi       = data.psi
-    self.theta     = data.theta
+    self.phi       = math.radians(data.phi/1000.0)
+    self.psi       = math.radians(data.psi/1000.0)
+    self.theta     = math.radians(data.theta/1000.0)
     self.vx        = data.vx
     self.vy        = data.vy
     self.vz        = data.vz
