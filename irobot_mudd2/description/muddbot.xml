@@ -1,0 +1,31 @@
+<robot name="muddbot">
+  <link name = "base_link" >
+    <visual>
+      <!-- <origin rpy="1.57 0 1.57" xyz="-.1651 -.1651 0"/> -->
+      <origin rpy="0 0 3.1415926" xyz="0 0 0"/> 
+      <geometry>
+        <mesh filename="package://irobot_mudd/description/MuddBot.stl"/>
+      </geometry>
+      <material name="white">
+        <color rgba=".9 .9 .9 1"/>
+      </material>
+    </visual>
+  </link>
+  <link name = "openni_camera" >
+    <visual>
+      <origin rpy="3.141 0 1.57 " xyz="0 0.02 0"/>
+      <geometry>
+        <mesh filename="package://irobot_mudd2/description/kinect.stl"/>
+      </geometry>
+      <material name="gray">
+        <color rgba=".3 .3 .3 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name = "joint1" type="continuous">
+    <parent link = "base_link" />
+    <child link = "openni_camera" />
+    <origin xyz = "-.112 0 .476" rpy="0 0 0"/>
+    <axis xyz = "0 0 1"/>
+  </joint>
+</robot>

@@ -1,0 +1,6 @@
+<launch>
+  <!--<node name="driver" pkg="ardrone2_mudd" type="driver"/>-->
+  <node name="control" pkg="ardrone2_mudd" type="joy.py"/>
+  <!--<node name="viewer" pkg="image_view" type="image_view" args="image:=/ardrone2/camera/image"/>-->
+  <node name="ip" pkg="image_thresholder" type="imageProcessor.py"/>
+</launch>

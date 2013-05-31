@@ -1,0 +1,6 @@
+int8 flag
+float32 roll
+float32 pitch
+float32 gaz
+float32 yaw
+---

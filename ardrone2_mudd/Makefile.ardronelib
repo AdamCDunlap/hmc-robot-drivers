@@ -1,0 +1,35 @@
+SDK_PATH = src/ARDroneLib
+PC_TARGET=yes
+USE_LINUX=yes
+include $(SDK_PATH)/Soft/Build/custom.makefile
+include $(SDK_PATH)/Soft/Build/config.makefile
+
+SDK_FLAGS += "USE_APP=yes"
+SDK_FLAGS += "APP_ID=ros"
+SDK_FLAGS += "USE_SDK=yes"
+
+GENERIC_BINARIES_SOURCE_DIR=src/
+GENERIC_TARGET_BINARIES_DIR=./
+GENERIC_BINARIES_SOURCE_ENTRYPOINTS=nothing
+
+export GENERIC_BINARIES_SOURCE_DIR
+export GENERIC_TARGET_BINARIES_DIR
+export GENERIC_BINARIES_SOURCE_ENTRYPOINTS
+export SDK_PATH
+
+all:
+	@$(MAKE) -C $(SDK_PATH)/Soft/Build $(SDK_FLAGS) USE_LINUX=yes
+	echo "+++++++"
+	@$(MAKE) -i -C $(SDK_PATH)/VP_SDK/Build $(SDK_FLAGS) USE_LINUX=yes USE_APP=yes APP_ID=driver
+	echo "@@@@@@"
+	mkdir -p lib/
+	cp $(SDK_PATH)/Soft/Build/targets_versions/ardrone*/*.a lib/
+	cp $(SDK_PATH)/Soft/Build/targets_versions/ffmpeg_x86*/*.a lib/
+	cp $(SDK_PATH)/Soft/Build/targets_versions/sdk*/*.a lib/
+	cp $(SDK_PATH)/Soft/Build/targets_versions/vlib*/*.a lib/
+
+clean:
+	@$(MAKE) -C $(SDK_PATH)/Soft/Build clean
+	rm -r lib/
+
+

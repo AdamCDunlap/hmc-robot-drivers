@@ -1,0 +1,4 @@
+uint16[] notes
+uint16[] durations
+---
+bool success

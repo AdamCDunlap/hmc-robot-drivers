@@ -1,0 +1,12 @@
+<launch>
+  <!-- static -->
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
+    args="-.1143 0.0 .4891 0.0 0.0 0.0 base_link pan_base 40" />
+
+  <!-- MuddBot Backbone -->
+  <include file="$(find irobot_mudd2)/launch/backbone.launch"/>
+ 
+  <!-- servo -->
+  <include file="$(find irobot_mudd2)/launch/kinectpan/controller_manager.launch"/>
+  <include file="$(find irobot_mudd2)/launch/kinectpan/controller_spawner.launch"/>
+</launch>

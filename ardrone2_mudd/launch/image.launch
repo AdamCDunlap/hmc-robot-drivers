@@ -1,0 +1,8 @@
+<launch>
+  <node name="driver" pkg="ardrone2_mudd" type="driver"/>
+  <node name="viewer" pkg="image_view" type="image_view" args="image:=/ardrone2/camera/image"/>
+  <node name="control" pkg="ardrone2_mudd" type="joy.py"/>
+  <node name="imageProcessor" pkg="lab10Demo" type="heli2.py" output="screen" />
+  <node name="lab10" pkg="lab10Demo" type="Drone2_Demos.py" />
+
+</launch>

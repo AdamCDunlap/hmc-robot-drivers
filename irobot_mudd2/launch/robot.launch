@@ -1,0 +1,8 @@
+<launch>
+  <!-- static_tfs -->
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
+    args="-.1143 0.0 .4728 0.0 0.0 0.0 base_link openni_camera 40" />
+
+  <!-- MuddBot Backbone -->
+  <include file="$(find irobot_mudd2)/launch/backbone.launch"/>
+</launch>

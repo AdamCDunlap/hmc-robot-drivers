@@ -13,8 +13,8 @@ bool virtualWall
 uint8 infraredByte
 bool advance
 bool play
-int16 distance
-int16 angle
+int32 distance
+int32 angle
 uint8 chargingState
 uint16 voltage
 int16 current

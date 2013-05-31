@@ -1,0 +1,22 @@
+<package>
+  <description brief="irobot_mudd">
+  irobot_mudd is a modification of irobot_create_2_1: a ROS driver for the iRobot iCreate.  
+  </description>
+  <author></author>
+  <email></email>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+
+  <rosdep name="python-serial"/>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="geometry_msgs"/>
+  <depend package="tf"/>
+  <depend package="nav_msgs"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/msg/cpp"/>
+    <cpp cflags="-I${prefix}/srv/cpp"/>
+  </export>
+
+</package>
