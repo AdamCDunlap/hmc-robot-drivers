@@ -1,0 +1,17 @@
+<package>
+  <description brief="missile_launcher">
+
+     Package that provides services for the Dream Cheeky missile launcher
+
+  </description>
+  <author>Zakkai Davidson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/missile_launcher</url>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+
+</package>
+
+
