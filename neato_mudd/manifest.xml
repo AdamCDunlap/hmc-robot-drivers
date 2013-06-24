@@ -1,0 +1,17 @@
+<package>
+  <description brief="neato_mudd">
+
+     Drivers for the Neato robot for use at Harvey Mudd College
+
+  </description>
+  <author>Zakkai Davidson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/neato_mudd</url>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+
+</package>
+
+
