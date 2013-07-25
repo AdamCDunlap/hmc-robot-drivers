@@ -4,10 +4,7 @@
 ##    For use at Harvey Mudd College
 ##    Authors: Cyrus Huang, Zakkai Davidson
 ##    Date: 6/13/13
-##    How it works: check the frontline and turn;
-##    the direction depends on whether the left and right line is detected
-##    Problem: cannot avoid obstables; not straight when following straight walls
-##
+##    How it works: visualize the laser scan data, and the detected lines are labeled green
 #############################################
 ##    NOTE:
 ##    Run Neato driver first with
@@ -19,6 +16,7 @@ import cv
 import neato_mudd
 
 from std_msgs.msg import *
+from sensor_msgs.msg import *
 from neato_mudd.msg import *
 from neato_mudd.srv import *
 from math import *
@@ -86,9 +84,6 @@ def rangeGUI():
         # find walls and add to image using Hough transformation
         findHoughLines()
 
-        # call wall following algorithm
-        wallFollow()
-
         # show image with range finder data and calculated walls
         cv.ShowImage("Ranges",  D.image)
         
@@ -106,8 +101,6 @@ def rangeGUI():
 
     D.tank(0, 0) # stops the robot
     print "Quitting..."
-            
-
             
 
 def init_GUI():
@@ -133,6 +126,8 @@ def init_GUI():
     rospy.init_node("range_listener", anonymous=True)
     rospy.Subscriber( "laserRangeData", LaserRangeData, range_callback )
 
+    D.laserBroadcaster = rospy.Publisher("scan", LaserScan)
+
     # initialize ROS service
     rospy.wait_for_service('tank') # wait until the motors are available
     D.tank = rospy.ServiceProxy('tank',Tank)
@@ -146,6 +141,19 @@ def range_callback(data):
     global D
 
     D.ranges = data.range_data
+    
+    # Sending laser data to gmapping
+    laserMsg = LaserScan()
+    laserMsg.header.stamp = rospy.Time.now()
+    laserMsg.header.frame_id = "/base_laser"
+    laserMsg.angle_min = pi/2
+    laserMsg.angle_max = 2.5*pi
+    laserMsg.angle_increment = pi/180.0
+    laserMsg.range_min = 0.5
+    laserMsg.range_max = 10.0
+    laserMsg.ranges = D.ranges
+    D.laserBroadcaster.publish(laserMsg)
+    print D.ranges    
 
 
 def findHoughLines():
@@ -217,95 +225,6 @@ def findHoughLines():
         D.distance.append(distance)
         D.midpoint.append(midpoint)
     
-def wallFollow():
-    """ tries to keep the wall lines vertical using arcade control """
-    global D
-    
-    # set up variables and constants
-    speed = 250
-    k = 1.0
-    angle_offset = 15
-    distance_offset = 100
-    x_sum = 0
-    y_sum = 0
-    minListNumber = 3
-
-    lineAhead = False
-    lineLeft = False
-    lineRight = False
-    
-    try:
-        try:
-            # find the average x coordinate of all danger points
-            for point in D.dangerList:
-                x_sum += point[0]
-                y_sum += point[1]
-            x_avg = x_sum / len(D.dangerList)
-            y_avg = y_sum / len(D.dangerList)
-        except:
-            pass
-
-        # check all the hough lines and put flags
-        for i in range(len(D.midpoint)):
-            line_midpoint = D.midpoint[i]
-            line_distance = D.distance[i]
-            line_theta = D.theta[i]
-            line_x = (D.lines[i][0][0],D.lines[i][1][0])
-            line_y = (D.lines[i][0][1],D.lines[i][1][1])
-
-            if abs(line_theta) < angle_offset:
-                if line_midpoint[1] > CENTER + distance_offset:
-                    lineBehind = True
-                elif line_midpoint[1] < CENTER and line_midpoint[1] > distance_offset and max(line_x) > CENTER and min(line_x) < CENTER:
-                    lineAhead = True
-            elif abs(line_theta) >= (90 - angle_offset):
-                if line_x[0] < CENTER and line_x[1] < CENTER and max(line_y) < CENTER:
-                    lineLeft = True
-                elif line_x[0] > CENTER and line_x[1] > CENTER and max(line_y) < CENTER:
-                    lineRight = True
-
-        # decide how to tank
-        if lineAhead:
-            if lineRight:
-                print "turn left"
-                D.tank(-100,100)
-                sleep(0.75)
-            else:
-                print "turn right"
-                D.tank(100,-100)
-                sleep(0.75)
-                
-        elif len(D.dangerList) > minListNumber:
-            delta_p = (70 - abs(CENTER - 30 - y_avg))
-            if x_avg > CENTER + 5:
-                print "danger right"
-                D.tank(100 - delta_p,200 + delta_p)
-            elif x_avg < CENTER - 5:
-                print "danger left"
-                D.tank(200 + delta_p,100 - delta_p)
-            
-        else:
-            print "go ahead"
-            theta = 0
-            for thetas in D.theta:
-                if abs(thetas) > abs(theta):
-                    theta = thetas
-            delta = 90 - abs(theta)
-            print theta
-            if theta > 0:
-                D.tank(speed - delta, speed + delta)
-            else:
-                D.tank(speed + delta ,speed - delta)
-
-    except:
-        pass
-
-##    print lineBehind,lineAhead
-##    print lineLeft,lineRight
-
-    
-    
-
 if __name__ == "__main__":
     rangeGUI()
 

@@ -58,7 +58,7 @@ def callback(data):
         D.tank(-220, -220)
     elif message == " ":
         D.stop()
-    time.sleep(0.1)
+    time.sleep(0.05)
     # if the message is the string 'q', we shutdown
     if message == 'q':
         D.tank(0,0)

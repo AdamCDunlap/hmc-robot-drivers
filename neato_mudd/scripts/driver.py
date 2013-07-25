@@ -5,9 +5,16 @@ from neato_mudd.srv import *
 from neato_mudd.msg import *
 from time import sleep
 from neato import xv11
-from math import *
+from datetime import datetime
+from math import sin, cos, pi
+from neato import xv11
 
-import cmd,sys,signal,serial
+from geometry_msgs.msg import Quaternion
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
+from tf.broadcaster import TransformBroadcaster
+
+import cmd,sys,signal,serial,os
 
 ########################################################
 # ROS wrapper for the Neato XV11 robot. Designed for
@@ -32,14 +39,6 @@ class NeatoDriver:
         self.rangePub  = rospy.Publisher('laserRangeData',LaserRangeData)
         self.fields = self.neato.state.keys() # gets all of the sensors fields from the Neato
         self.neato.update = self.sense
-        # for odometry testing
-        self.prevL = 0
-        self.prevR = 0
-        self.x     = 0
-        self.y     = 0
-        self.theta = 0
-        self.odom = NeatoOdom()
-        self.odomPub = rospy.Publisher('neatoOdom', NeatoOdom)
         
     def start(self):
         self.neato.start()
@@ -78,40 +77,6 @@ class NeatoDriver:
         range_data.__setattr__("range_data", self.neato.range_data)
         self.rangePub.publish(range_data)
 
-        # odomemtry in testing
-        self.odomUpdate()
-
-    def odomUpdate(self):
-        """ updates the odometry of the robot by using the measured
-            wheel distances and wheelbase
-        """
-        WHEEL_BASE = 237.5 # measured in mm
-        odom = NeatoOdom()
-        
-        LWheelMM = self.neato.state["LeftWheel_PositionInMM"]
-        RWheelMM = self.neato.state["RightWheel_PositionInMM"]
-
-        # calculate difference in position from last time
-        Ldist = LWheelMM - self.prevL
-        Rdist = RWheelMM - self.prevR
-
-        # set new measurements to be the old ones
-        self.prevL = LWheelMM
-        self.prevR = RWheelMM
-        
-        dist = (Ldist + Rdist)/2.0
-        self.theta    += (Ldist - Rdist)/WHEEL_BASE
-        self.x        += dist * sin(self.theta)
-        self.y        += dist * cos(self.theta)
-
-        odom.__setattr__("theta", self.theta)
-        odom.__setattr__('x', self.x)
-        odom.__setattr__('y', self.y)
-
-        self.odomPub.publish(odom)
-        
-        
-        
 class prompt(cmd.Cmd):
     def __init__(self,robot):
         cmd.Cmd.__init__(self)

@@ -25,18 +25,20 @@ class TMap:
         """
         nodes_stack = []    # stack for looping through all edges
 
+
         # put the start on the stack
         nodes_stack.append(self.start)
-
+        
         # loop through all nodes
         while len(nodes_stack) > 0:
+                
             node = nodes_stack.pop() # take node off the top of the stack
             if node.name == node_to_find: # compare names to see if node is found
                 self.resetNodes()
                 return node
             node.visited = True
-            neighbors_list = node.getNeighbors() # get the neighbors of that node
-
+            neighbors_list = node.getNeighbors() # get the neighbors of that node    
+        
             # loop through each neighbor
             for neighbor in neighbors_list:
                 if neighbor != None and neighbor.visited == False: # if there is a neighbor,
@@ -84,7 +86,7 @@ class TMap:
 
         # put the start on the stack
         nodes_stack.append(self.start)
-
+        
         # loop through all nodes
         while len(nodes_stack) > 0:
             node = nodes_stack.pop() # take node off the top of the stack
@@ -108,8 +110,8 @@ class TMap:
         nodes_stack = []
 
         # put the start on the stack
+        
         nodes_stack.append(self.start)
-
         # loop until out of edges
         while len(all_edges) > 0:
             src_node = nodes_stack.pop()
@@ -154,6 +156,7 @@ class TMap:
         path           = []         # list to contain nodes on path
 
         # enqueue the first node and change self.start reference
+
         start = self.findNode(start)
         self.start = start # useful for resetting nodes
         nodes_to_check.appendleft(start)
@@ -192,7 +195,7 @@ class TMap:
         return False
 
 
-    def generateCommands(self, start, end):
+    def generateCommands(self, start, end, curr_dir = NORTH):
         """ takes a path as generated in TMap.mapBFS() and outputs
             a list of commands in string format
             input: a list of TMapNodes as outputted by TMap.mapBFS()
@@ -200,13 +203,12 @@ class TMap:
         """
         # get shortest path from BFS
         path = self.mapBFS(start,end)
-
+        
         # for returning
         name_path = [ node.name for node in path ]
         
         path.reverse()      # puts first task at end in preparation for pop()
         current   = path.pop()
-        curr_dir  = NORTH    # robot must face East for first step (to be modified)
         curr_type = current.type
         commands  = []
         # loop through the whole path
@@ -225,6 +227,8 @@ class TMap:
                 commands.append([RIGHT,curr_type])
             elif dir_pair in S_PAIRS:
                 commands.append([STRAIGHT,curr_type])
+            elif dir_pair in B_PAIRS:
+                commands.append([TURNAROUND,curr_type])
             else:
                 commands.append(["Error",curr_type])
 
@@ -234,8 +238,6 @@ class TMap:
             curr_type = current.type
 
         return commands, name_path
-
-
 
 class TMapNode:
         """ individual node class for TMap """
@@ -284,24 +286,28 @@ class TMapNode:
             self.north = node
             node.south = self
             self.update()
+            node.update()
 
         def setSouth(self, node):
             """ sets the neighbor to the South to given node """
             self.south = node
             node.north = self
             self.update()
+            node.update()
 
         def setEast(self, node):
             """ sets the neighbor to the East to given node """
             self.east = node
             node.west = self
             self.update()
+            node.update()
 
         def setWest(self, node):
             """ sets the neighbor to the West to given node """
             self.west = node
             node.east = self
             self.update()
+            node.update()
 
         def setType(self, node_type):
             """ sets the node to input node_type """
@@ -325,49 +331,3 @@ class TMapNode:
                 self.type = T_INT
             elif num == 4:
                 self.type = CROSS
-            
-                
-
-##def test():
-##    """ function testing sandbox """
-##    m = TMap()
-##    a = TMapNode("a", DEAD_END)
-##    b = TMapNode("b", HALLWAY)
-##    c = TMapNode("D", DEAD_END)
-##    m.start.setNorth(a)
-##    m.start.setWest(b)
-##    m.start.west.setWest(c)
-##
-##    test = repr(m)
-##    print "m is ", test
-##    
-##    print m.findNode("a")
-##    print m.findNode("D")
-##    print m.findNode("S")
-##
-##
-##    print "Map generated from output is"
-##    q = TMap()
-##    q.generateMap(eval(test))
-##    print q
-##
-##    print q.findNode("a")
-##    print q.findNode("D")
-##    print q.findNode("S")
-##    print q.findNode("b")
-##
-##    print "Attempting BFS from S to D"
-##    path = q.mapBFS()
-##    print path
-##    commands = generatePath(path)
-##    print commands
-##    test_map = TMap()
-##    test_map.generateMap(OLIN_BECKMAN)
-##    print test_map
-##    path = test_map.mapBFS()
-##    print path
-##    commands = test_map.generateCommands()
-##    print commands
-##
-##if __name__ == "__main__":
-##    test()

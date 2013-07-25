@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
 #####################################################
-## Globals for use with navigation programs using TMap
+## Globals for use with navigation programs using Tmap
 ## Designed for use at Harvey Mudd College
-## Author: Zakkai Davidson
-## Date: 6/19/13
+## Author: Zakkai Davidson, Jerry Hsiung, Cyrus Huang
+## Date: June to July, 2013
 #####################################################
 import cv
 
@@ -23,12 +23,12 @@ START   = 4
 DEST    = 5
 
 # colors for node states
-COLOR_EMPTY   = cv.RGB(  0,145,255)
-COLOR_PRESENT = cv.RGB(141, 84,138)
-COLOR_VISITED = cv.RGB( 80, 80, 80)
-COLOR_ON_PATH = cv.RGB(255,255,  0)
-COLOR_START   = cv.RGB(  0,255,  0)
-COLOR_DEST    = cv.RGB(255,  0,  0)
+COLOR_EMPTY   = cv.RGB(  0,145,255)  # BLUE 
+COLOR_PRESENT = cv.RGB(  0,255,  0)  # RED
+COLOR_VISITED = cv.RGB( 80, 80, 80)  # GREY
+COLOR_ON_PATH = cv.RGB(255,255,  0)  # YELLOW
+COLOR_START   = cv.RGB(  0,255,  0)  # RED
+COLOR_DEST    = cv.RGB(255,  0,  0)  # GREEN
 COLORS = {
     EMPTY: COLOR_EMPTY,
     PRESENT: COLOR_PRESENT,
@@ -100,10 +100,11 @@ NODE_COORDS = {
     57: (190,-60),
     58: (160,-60),
     59: (130,-60),
-    60: (120,-10)
+    60: (120,-10),
+    61: (50, 80),
+    62: (50, 70),
+    63: (-12.5, 0)
 }
-
-
 
 HALLWAY_LENGTHS = {
     0: 25,
@@ -136,9 +137,10 @@ HALLWAY_LENGTHS = {
     58: 60,
     60: 20,
     20: 50,
-    21: 50
+    21: 50,
+    62: 20,
+    63: 25
           }
-
 
 # initial states of nodes
 D.node_states = {
@@ -201,7 +203,10 @@ D.node_states = {
     57: 0,
     58: 0,
     59: 0,
-    60: 0}
+    60: 0,
+    61: 0,
+    62: 0,
+    63: 0}
 
 # helpful key list
 NODE_NUMS = NODE_COORDS.keys()
@@ -223,29 +228,45 @@ SOUTH = "S"
 EAST  = "E"
 WEST  = "W"
 DIRECTIONS = [NORTH, SOUTH, EAST, WEST]
+
+# turns
 LEFT     = "L"
 RIGHT    = "R"
 STRAIGHT = "S"
+TURNAROUND = "TRND"
+TURN = [LEFT,RIGHT,STRAIGHT,TURNAROUND]
+
 L_PAIRS  = [[SOUTH,EAST],[NORTH,WEST],[EAST,NORTH],[WEST,SOUTH]] # order: [current dir, next dir]
 R_PAIRS  = [[NORTH,EAST],[SOUTH,WEST],[EAST,SOUTH],[WEST,NORTH]]
 S_PAIRS  = [[NORTH,NORTH],[SOUTH,SOUTH],[EAST,EAST],[WEST,WEST]]
+B_PAIRS  = [[NORTH,SOUTH],[SOUTH,NORTH],[EAST,WEST],[WEST,EAST]]
+
+# default direction during localization
+DE_DIR = {
+    "TU": RIGHT,
+    "TR": STRAIGHT,
+    "TL": STRAIGHT,
+    "LL": LEFT,
+    "LR": RIGHT,
+    "D": TURNAROUND
+    }
 
 # maps
 LIBRA = [
-    [ 0, 1, WEST],
+    [ 0,63, WEST],
     [ 1, 2,NORTH],
     [ 2, 3,NORTH],
     [ 3, 4, EAST],
     [ 4, 5, EAST],
     [ 5, 6,NORTH],
     [ 5,20, EAST],
-    [20,12, EAST],
-    [12,21, EAST],
-    [21,11, EAST],
     [ 6, 7,NORTH],
     [ 7, 8, EAST],
     [ 8, 9, EAST],
     [ 9,10,SOUTH],
+    [20,12, EAST],
+    [12,21, EAST],
+    [11,21, WEST],
     [10,11,SOUTH],
     [11,17, EAST],
     [17,13, EAST],
@@ -269,14 +290,14 @@ LIBRA = [
     [32,33,NORTH],
     [33,34, EAST],
     [34,36, EAST],
-    [25,37, WEST],#
+    [25,37, WEST],
     [37,38, WEST],
-    [39,38,SOUTH],
+    [38,39,SOUTH],
     [39,40,SOUTH],
     [40,41, WEST],
     [41,42, WEST],
     [42,43,SOUTH],
-    [43,29,SOUTH],#
+    [43,29,SOUTH],
     [27,44, EAST],
     [44,45, EAST],
     [45,46,NORTH],
@@ -292,4 +313,8 @@ LIBRA = [
     [57,58, WEST],
     [58,59, WEST],
     [15,60,SOUTH],
-    [60,19,SOUTH]]
+    [60,19,SOUTH],
+    [12,62,NORTH],
+    [62,61,NORTH],
+    [63, 1, WEST]]
+
