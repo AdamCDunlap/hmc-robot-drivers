@@ -110,6 +110,8 @@ def command_callback(data):
             expected_type = ["ST"]
         elif expected_type == ["STOP"]:
             expected_type = ["TR", "TL", "TU","LR", "LL","ST","D"]
+        else:
+            expected_type = ["LR", "LL"]
         
         if hallway_type in expected_type:
             message.__setattr__("command", command)
