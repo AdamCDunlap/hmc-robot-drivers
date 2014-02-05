@@ -1,5 +1,9 @@
 #!/usr/bin/env python
- 
+
+##############################
+## Driver for the "good robot"
+##############################
+
 # Generic driver for the Neato XV-11 Robot Vacuum
 # Copyright (c) 2010 University at Albany. All right reserved.
 #
@@ -27,7 +31,7 @@
 
 #################################################################################
 ###
-### UPDATED MAY&JUNE 2013 AT HARVEY MUDD COLLEGE
+### THIS FILE UPDATED MAY&JUNE 2013 AT HARVEY MUDD COLLEGE
 ###
 #################################################################################
 
@@ -82,32 +86,15 @@ class Monitor(Thread):
             # send all queued commands
             self.sendAll()
 
-            # request all current sensor data
+            # request all current sensor and laser data
             self.requestSensors()
             self.sendAll()
             time.sleep(.05)
 
-##            try:
-##                print "Before: " , self.xv11.port.inWaiting()
-##            except:
-##                print "Not ready yet"
-
-            # receive and handle sensor data
+            # receive and handle sensor and laser data
             self.readSensors()
-            
 
-##            print self.state
-##            
-##            print self.range_data
-##            
-##            try:
-##                after = self.xv11.port.inWaiting()
-##                print "After: " , after
-##                if after > 0:
-##                    print "Extra is: ", self.xv11.port.read(self.xv11.port.inWaiting())
-##            except:
-##                print "Not ready yet"
-                
+            # update the sensor and laser data    
             self.update()
 
 class xv11():
@@ -138,6 +125,7 @@ class xv11():
         self.runRef = []
         self.range_data = [0]*360
         self.queue = []
+        
         # Default number is 2 as only digital sensor and button data are needed
         self.reqtime = REQTIME
         self.reqnum = DEFAULTREQ
@@ -248,7 +236,6 @@ class xv11():
         self.send("getdigitalsensors\n")
         self.send("getbuttons\n")
         self.send("getldsscan\n")
-        self.send("getmotors\n")
 
 
         
@@ -264,7 +251,7 @@ class xv11():
             line = self.port.readline()
             lines += line
             num = self.port.inWaiting()
-
+##  "bad robot" has those lines
 ##            if num < 100:
 ##                time.sleep(0.015)
 ##        print lines
@@ -376,5 +363,3 @@ class xv11():
     def buttonOff(self):
         """Start Button off"""
         self.send("setLED buttonoff\n")
-
-    
