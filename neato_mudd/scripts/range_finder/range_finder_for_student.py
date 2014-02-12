@@ -1,0 +1,134 @@
+#!/usr/bin/python
+#############################################
+##    Range finder GUI for Neato XV11
+##    For use at Harvey Mudd College
+##    Authors: Cyrus Huang, Zakkai Davidson
+##    Date: 6/13/13
+##    How it works: visualize the laser scan data, and the detected lines are labeled green
+#############################################
+##    NOTE:
+##    Run Neato driver first with
+##    rosrun neato_mudd driver.py
+#############################################
+import roslib; roslib.load_manifest('neato_mudd')
+import rospy
+import cv
+import neato_mudd
+
+from std_msgs.msg import *
+from sensor_msgs.msg import *
+from neato_mudd.msg import *
+from neato_mudd.srv import *
+from math import *
+
+# class for a generic data holder
+class Data:
+    def __init__(self): pass    # empty constructor
+
+D = Data()
+
+# window variables
+WIN_WIDTH  = 600                # keeps square windows
+WIN_HEIGHT = WIN_WIDTH
+
+
+# line drawing variables
+MAX_MAG      = 1000             # unreliable data above 10m
+MAG_SCALE    = 100              # 100 pixels per meter
+CENTER       = WIN_WIDTH/2
+ANGLE_OFFSET = 90               # front of robot faces up on screen
+REV          = 360              # 360 degrees per rev (range data is stored in degrees)
+
+def rangeGUI():
+    """ creates and displays a GUI for the range finder data
+        Ranges window: shows range finder values as red lines
+        coming from the center of the range finder
+        HoughLines window: shows the result of using a Hough
+        transformation on image containing the range values as points.
+    """
+    global D
+    
+    init_GUI() # initialize images and windows
+    
+    # main loop
+    while rospy.is_shutdown() == False:
+
+        # loop through every angle
+        for angle in range(REV):
+            magnitude = MAG_SCALE*D.ranges[angle]
+            x = int(CENTER + magnitude*cos(pi/180*(angle+ANGLE_OFFSET)))  # find x and y coordinates based on the angle
+            y = int(CENTER - magnitude*sin(pi/180*(angle+ANGLE_OFFSET)))  # and the length of the line
+
+            if 0 < magnitude < MAX_MAG: # if data is within "good data" range
+                # add line to the ranges image
+                cv.Line(D.image, (CENTER,CENTER), (x,y), cv.RGB(255, 0, 0))
+
+        # wait and check for quit request
+        key_code = cv.WaitKey(1) & 255
+        key_press = chr(key_code)
+        if key_code == 27 or key_press == 'q' : # if ESC or 'q' was pressed
+            rospy.signal_shutdown( "Quitting..." )
+
+
+        # show image with range finder data and calculated walls
+        cv.ShowImage("Ranges",  D.image)
+
+        # clear the images for next loop
+        cv.Set(D.image, cv.RGB(0, 0, 0))
+
+
+    D.tank(0, 0) # stops the robot
+    print "Quitting..."
+            
+
+def init_GUI():
+    """ initializes open cv windows and creates images to display """
+    global D
+
+    print
+    print "Press 'q' in Ranges window to quit"
+    
+    # create window and image to show range values
+    cv.NamedWindow("Ranges")
+    cv.MoveWindow("Ranges", WIN_WIDTH/2, WIN_HEIGHT/2)
+    D.image = cv.CreateImage((WIN_WIDTH,WIN_HEIGHT), 8, 3) # 8 is pixel depth and 3 is # of channels
+    
+    # initialize ROS subscription
+    rospy.init_node("range_listener", anonymous=True)
+    rospy.Subscriber( "laserRangeData", LaserRangeData, range_callback )
+
+    D.laserBroadcaster = rospy.Publisher("scan", LaserScan)
+
+    # initialize ROS service
+    rospy.wait_for_service('tank') # wait until the motors are available
+    D.tank = rospy.ServiceProxy('tank',Tank)
+    
+    # give initial values to range data before first callback
+    D.ranges =[0]*REV
+
+
+def range_callback(data):
+    """ handles published range data and updates global """
+    global D
+
+    D.ranges = data.range_data
+    
+    # Sending laser data to gmapping
+    laserMsg = LaserScan()
+    laserMsg.header.stamp = rospy.Time.now()
+    laserMsg.header.frame_id = "/base_laser"
+    laserMsg.angle_min = pi/2
+    laserMsg.angle_max = 2.5*pi
+    laserMsg.angle_increment = pi/180.0
+    laserMsg.range_min = 0.5
+    laserMsg.range_max = 10.0
+    laserMsg.ranges = D.ranges
+    D.laserBroadcaster.publish(laserMsg)
+    print D.ranges    
+
+
+    
+    
+if __name__ == "__main__":
+    rangeGUI()
+
