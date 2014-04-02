@@ -23,7 +23,7 @@ class ARDroneDriver;
 #include "NavdataMessageDefinitions.h"
 #undef NAVDATA_STRUCTS_INCLUDES
 
-
+//nothing
 #define _DEG2RAD 0.01745331111
 #define _RAD2DEG 57.2957184819
 
