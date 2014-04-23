@@ -236,6 +236,7 @@ class xv11():
         self.send("getdigitalsensors\n")
         self.send("getbuttons\n")
         self.send("getldsscan\n")
+        self.send("getmotors\n")
 
 
         
