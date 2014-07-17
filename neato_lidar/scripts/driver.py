@@ -40,11 +40,12 @@ class Checksum:
         return s == wantedsum
 
 class LidarReader:
-    def __init__(self, serial_connection, publisher):
+    def __init__(self, serial_connection, rangepublisher, rangestrpublisher):
         self.serial_connection = serial_connection
         self.ranges = [0 for _ in range(360)]
         self.strengths = [0 for _ in range(360)]
-        self.publisher = publisher
+        self.rangepublisher = rangepublisher
+        self.rangestrpublisher = rangestrpublisher
 
     def read_dists(self):
         """Runs a loop that computes distances"""
@@ -100,8 +101,9 @@ class LidarReader:
                     # Publish ranges!
                     ranges = neato_lidar.msg.LidarRanges()
                     ranges.__setattr__("ranges", self.ranges)
+                    self.rangepublisher.publish(ranges)
                     ranges.__setattr__("strengths", self.strengths)
-                    self.publisher.publish(ranges)
+                    self.rangestrpublisher.publish(ranges)
 
                     # we're done with this packet
                     state = 'wait_for_start'
@@ -143,6 +145,7 @@ if __name__ == '__main__':
     node = rospy.init_node('neato_lidar')
 
     lidar_pub = rospy.Publisher('lidar', neato_lidar.msg.LidarRanges)
+    lidar_withstr_pub = rospy.Publisher('lidar_with_strengths', neato_lidar.msg.LidarRangesStrengths)
 
     print "Connecting to LIDAR"
 
@@ -163,5 +166,5 @@ if __name__ == '__main__':
               "access the serial port if it's plugged in!)"
     else:
         print 'connection successful'
-        lr = LidarReader(serial_connection, lidar_pub)
+        lr = LidarReader(serial_connection, lidar_pub, lidar_withstr_pub)
         lr.read_dists()
