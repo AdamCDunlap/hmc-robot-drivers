@@ -102,8 +102,11 @@ class LidarReader:
                     ranges = neato_lidar.msg.LidarRanges()
                     ranges.__setattr__("ranges", self.ranges)
                     self.rangepublisher.publish(ranges)
-                    ranges.__setattr__("strengths", self.strengths)
-                    self.rangestrpublisher.publish(ranges)
+
+                    rangestrs = neato_lidar.msg.LidarRangesStrengths()
+                    rangestrs.__setattr__("ranges", self.ranges)
+                    rangestrs.__setattr__("strengths", self.strengths)
+                    self.rangestrpublisher.publish(rangestrs)
 
                     # we're done with this packet
                     state = 'wait_for_start'
