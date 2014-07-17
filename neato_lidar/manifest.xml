@@ -1,0 +1,16 @@
+<package>
+  <description brief="neato_lidar">
+
+     Driver for the neato's lidar sensor
+
+  </description>
+  <author>Adam Dunlap</author>
+  <license>GPL</license>
+  <review status="unreviewed" notes=""/>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+
+</package>
+
+
